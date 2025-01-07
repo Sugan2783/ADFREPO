@@ -82,6 +82,30 @@
 			{
 				"name": "Set variable1",
 				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "deptvariable1",
+					"value": {
+						"value": "@pipeline().parameters.sourcedeptparam",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1_copy1",
+				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
 					"secureOutput": false,
