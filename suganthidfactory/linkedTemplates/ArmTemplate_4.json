@@ -1,0 +1,1411 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "suganthidfactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SALES_FACT_PROJ')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "target/AzureProject/DIMTABLE",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CUSTOMER_DIM_KEY",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_FIRST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_LAST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "IS_LOYAL",
+						"type": "String"
+					},
+					{
+						"name": "PRIMARY_EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "PRIMARY_PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "R_Address_Lane1",
+						"type": "String"
+					},
+					{
+						"name": "R_Address_Lane_2",
+						"type": "String"
+					},
+					{
+						"name": "R_City_Name",
+						"type": "String"
+					},
+					{
+						"name": "R_State_Name",
+						"type": "String"
+					},
+					{
+						"name": "R_Country_Name",
+						"type": "String"
+					},
+					{
+						"name": "R_Zip_Code",
+						"type": "String"
+					},
+					{
+						"name": "R_Gate_Code",
+						"type": "String"
+					},
+					{
+						"name": "O_ADDRESS_LANE1",
+						"type": "String"
+					},
+					{
+						"name": "O_ADDRESS_LANE2",
+						"type": "String"
+					},
+					{
+						"name": "O_CITY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "O_STATE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "O_COUNTRY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "O_ZIP_CODE",
+						"type": "String"
+					},
+					{
+						"name": "O_GATE_CODE",
+						"type": "String"
+					},
+					{
+						"name": "JOINING_DATE",
+						"type": "String"
+					},
+					{
+						"name": "STG_CREATE_DATE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SALES_FACT_PROJ_NEW')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "SALES_FACT.csv",
+						"folderPath": "target/AzureProject/DIMTABLE",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ORDER_LINE_ID",
+						"type": "String"
+					},
+					{
+						"name": "ORDER_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_DIM_KEY ",
+						"type": "String"
+					},
+					{
+						"name": "PAYMENT_REF_KEY ",
+						"type": "String"
+					},
+					{
+						"name": "CHANNEL_REF_KEY ",
+						"type": "String"
+					},
+					{
+						"name": "DELIVERY_TYPE_REF_KEY ",
+						"type": "String"
+					},
+					{
+						"name": "TOPPING_DIM_KEY ",
+						"type": "String"
+					},
+					{
+						"name": "LOCATION_DIM_KEY ",
+						"type": "String"
+					},
+					{
+						"name": "Product_Dim_Key",
+						"type": "String"
+					},
+					{
+						"name": "PROMOTION_DIM_KEY",
+						"type": "String"
+					},
+					{
+						"name": "DATE_KEY",
+						"type": "String"
+					},
+					{
+						"name": "ORDER_DATE ",
+						"type": "String"
+					},
+					{
+						"name": "ORDER_STATUS ",
+						"type": "String"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "String"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "String"
+					},
+					{
+						"name": "Topping_Price",
+						"type": "String"
+					},
+					{
+						"name": "PROMOTION_AMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "DM_CREATE_DATE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQLDB_LOCATIONS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "HR",
+					"table": "LOCATIONS_DIM"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SRCDATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"srcparamdata": {
+						"type": "string"
+					},
+					"srcparampath": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "SRCDATAPARAM"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().srcparamdata",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().srcparampath",
+							"type": "Expression"
+						},
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SRC_DERIVED')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "EMPLOYEES_NEW.csv",
+						"folderPath": "target/DATALOAD",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EMPLOYEE_ID",
+						"type": "String"
+					},
+					{
+						"name": "FIRST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "LAST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "HIRE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "JOB_ID",
+						"type": "String"
+					},
+					{
+						"name": "SALARY",
+						"type": "String"
+					},
+					{
+						"name": "COMMISSION_PCT",
+						"type": "String"
+					},
+					{
+						"name": "MANAGER_ID",
+						"type": "String"
+					},
+					{
+						"name": "DEPARTMENT_ID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_CUSTOMERS_JOIN')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DATE_KEY",
+						"type": "String"
+					},
+					{
+						"name": "DAY_YYYY_MM_DD",
+						"type": "String"
+					},
+					{
+						"name": "DAY_US_MM_DD_YYYY",
+						"type": "String"
+					},
+					{
+						"name": "DAY_US_LONG",
+						"type": "String"
+					},
+					{
+						"name": "DAY_US_M_D_YY",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_LONG",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_IN_QUARTER_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_IN_YEAR_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_IN_YEAR_LONG",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_QTR_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_FROM_TO",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_STARTING",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_YEAR_CONT",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_QTR_YEAR_CONT",
+						"type": "String"
+					},
+					{
+						"name": "DAY_IN_WEEK_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "DAY_IN_WEEK_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DAY_IN_WEEK_LONG",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_LONG",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_SHORT_US",
+						"type": "String"
+					},
+					{
+						"name": "YEAR",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_CUST_JOINS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "STG_CUSTOMER_JOIN.csv",
+						"folderPath": "target/AzureProject/Stg_JOINS_TABLES",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_LOCATION')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "STG_STORE_LOCATION.csv",
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "STORE_LOCATION_ID",
+						"type": "String"
+					},
+					{
+						"name": "STORE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "STORE_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "STORE_PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "STORE_OPEN_TIME",
+						"type": "String"
+					},
+					{
+						"name": "STORE_CLOSE_TIME",
+						"type": "String"
+					},
+					{
+						"name": "STATE_COUNTRY_ID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_LOCATION_JOINS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "target/AzureProject/Stg_JOINS_TABLES",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CUSTOMER_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_FIRST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_LAST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_DOB",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "IS_LOYAL",
+						"type": "String"
+					},
+					{
+						"name": "FIRST_PURCHASE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_ADDRESS_ID",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_LANE1",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_LANE_2",
+						"type": "String"
+					},
+					{
+						"name": "CITY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "STATE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "COUNTRY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ZIP_CODE",
+						"type": "String"
+					},
+					{
+						"name": "GATE_CODE",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_STATUS",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "THIRD_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_NUMBER_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_STATUS",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL_STATUS",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "HUT_LOVERS_ID",
+						"type": "String"
+					},
+					{
+						"name": "JOINING_DATE",
+						"type": "String"
+					},
+					{
+						"name": "IS_ACTIVE",
+						"type": "String"
+					},
+					{
+						"name": "MEMBER_ID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_PRODUCT_CATEGORY')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "STG_PRODUCT_CATEGORY.csv",
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PRODUCT_CATEGORY_ID",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCT_CATEGORY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCT_CATEGORY_DESCRIPTION",
+						"type": "String"
+					},
+					{
+						"name": "IS_ACTIVE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_PRODUCT_JOINS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "target/AzureProject/Stg_JOINS_TABLES",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CUSTOMER_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_FIRST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_LAST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_DOB",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "IS_LOYAL",
+						"type": "String"
+					},
+					{
+						"name": "FIRST_PURCHASE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_ADDRESS_ID",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_LANE1",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_LANE_2",
+						"type": "String"
+					},
+					{
+						"name": "CITY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "STATE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "COUNTRY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ZIP_CODE",
+						"type": "String"
+					},
+					{
+						"name": "GATE_CODE",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS_STATUS",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "THIRD_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_NUMBER_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_PHONE_STATUS",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL_ID",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTOMER_EMAIL_STATUS",
+						"type": "String"
+					},
+					{
+						"name": "SECONDARY_EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "HUT_LOVERS_ID",
+						"type": "String"
+					},
+					{
+						"name": "JOINING_DATE",
+						"type": "String"
+					},
+					{
+						"name": "IS_ACTIVE",
+						"type": "String"
+					},
+					{
+						"name": "MEMBER_ID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_PRODUCT_SUB_CATEGORY')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "STG_PRODUCT_SUB_CATEGORY.csv",
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PRODUCT_SUBCATEGORY_ID",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCT_SUBCATEGORY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCT_SIZE",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCT_CATEGORY_ID",
+						"type": "String"
+					},
+					{
+						"name": "IS_ACTIVE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_PROMOTIONS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "STG_PROMOTIONS.csv",
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PROMOTION_ID",
+						"type": "String"
+					},
+					{
+						"name": "PROMOTION_NAME",
+						"type": "String"
+					},
+					{
+						"name": "PROMOTION_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "DISCOUNT_AMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "START_DATE",
+						"type": "String"
+					},
+					{
+						"name": "END_DATE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_STATE_LOCATION')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "STG_STATE_COUNTRY.csv",
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "STATE_COUNTRY_ID",
+						"type": "String"
+					},
+					{
+						"name": "STATE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "STATE_ABBREVATION",
+						"type": "String"
+					},
+					{
+						"name": "STATE_COUNTRY",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STORE_LOCATION_DIM')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "locations_dim.csv",
+						"folderPath": "target/AzureProject/DIMTABLE",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Loc_Dim_Key",
+						"type": "String"
+					},
+					{
+						"name": "Store_Location_ID",
+						"type": "String"
+					},
+					{
+						"name": "Store_Name",
+						"type": "String"
+					},
+					{
+						"name": "Store_Address",
+						"type": "String"
+					},
+					{
+						"name": "Store_Open_Time",
+						"type": "String"
+					},
+					{
+						"name": "Store_Close_Time",
+						"type": "String"
+					},
+					{
+						"name": "State_Name",
+						"type": "String"
+					},
+					{
+						"name": "FLAG",
+						"type": "String"
+					},
+					{
+						"name": "DM_CREATE_DATE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TARGET_SWITCH')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FOLDER_NAME": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@concat('target/',dataset().FOLDER_NAME)",
+							"type": "Expression"
+						},
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "LOCATION_ID",
+						"type": "String"
+					},
+					{
+						"name": "STREET_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "POSTAL_CODE",
+						"type": "String"
+					},
+					{
+						"name": "CITY",
+						"type": "String"
+					},
+					{
+						"name": "STATE_PROVINCE",
+						"type": "String"
+					},
+					{
+						"name": "COUNTRY_ID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TGTDATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TGTPARAM": {
+						"type": "string"
+					},
+					"TGTPATH": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "SRCDATAPARAM"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().TGTPARAM",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().TGTPATH",
+							"type": "Expression"
+						},
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EMPLOYEE_ID",
+						"type": "String"
+					},
+					{
+						"name": "FIRST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "LAST_NAME",
+						"type": "String"
+					},
+					{
+						"name": "EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "PHONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "HIRE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "JOB_ID",
+						"type": "String"
+					},
+					{
+						"name": "SALARY",
+						"type": "String"
+					},
+					{
+						"name": "COMMISSION_PCT",
+						"type": "String"
+					},
+					{
+						"name": "MANAGER_ID",
+						"type": "String"
+					},
+					{
+						"name": "DEPARTMENT_ID",
+						"type": "String"
+					},
+					{
+						"name": "SK",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TGT_COUNTRY_DB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TGT_TABLE": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "DB_DATASET"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().TGT_TABLE",
+							"type": "Expression"
+						},
+						"folderPath": "target/ORACLE_HR",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Tgt_DataLoad')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TARGETFILE": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().TARGETFILE,'.csv')",
+							"type": "Expression"
+						},
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azure_prod_topp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "hr",
+					"table": "PRODUCT_TOPPINGS_STG"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

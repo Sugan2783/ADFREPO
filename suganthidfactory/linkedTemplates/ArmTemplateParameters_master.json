@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "suganthidfactory"
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"BlobLinkedService_accountKey": {
+			"value": ""
+		},
+		"Oracle1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "datacloudserver.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "DATABASECLOUD"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "suganthib"
+		},
+		"BlobLinkedService_properties_typeProperties_url": {
+			"value": "https://suganthistoragenew.dfs.core.windows.net/"
+		},
+		"EVENTBASEDTRIGGER_properties_typeProperties_scope": {
+			"value": "/subscriptions/6cda72ae-09db-4ac7-a49f-757ca002a156/resourceGroups/SUGANTHI_RGROUP/providers/Microsoft.Storage/storageAccounts/suganthistoragenew"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
