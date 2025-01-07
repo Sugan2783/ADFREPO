@@ -1,0 +1,17 @@
+{
+	"name": "PROD_DIM",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "HR",
+			"table": "PRODUCT_DIM"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
