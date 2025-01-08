@@ -45,7 +45,14 @@
 					{
 						"name": "Set variable1",
 						"type": "SetVariable",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Set variable1_copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"secureOutput": false,
 							"secureInput": false
@@ -90,6 +97,23 @@
 								]
 							}
 						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "ARRAYVAR2",
+							"value": {
+								"value": "@variables('ARRAYVAR')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable1_copy1",
+						"type": "SetVariable",
+						"dependsOn": [],
 						"policy": {
 							"secureOutput": false,
 							"secureInput": false
