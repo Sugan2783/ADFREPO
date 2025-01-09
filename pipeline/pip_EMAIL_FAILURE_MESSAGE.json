@@ -3,33 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "EMAIL_FAILURE",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Copy data1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"method": "POST",
-					"body": {
-						"value": "{\n\"PipelineName\": \"@{pipeline().Pipeline}\",\n\"DataFactoryName\": \"@{pipeline().DataFactory}\",\n\"RunIDs\": \"@{pipeline().RunId}\",\n\"ErrorMessage\": \"@{activity('Copy data1').output.errors[0].Message}\"\n}",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "Copy data1",
 				"type": "Copy",
 				"dependsOn": [],
