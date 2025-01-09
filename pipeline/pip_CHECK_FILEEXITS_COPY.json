@@ -147,7 +147,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"variableName": "file",
-											"value": "true"
+											"value": true
 										}
 									}
 								]
@@ -160,7 +160,7 @@
 		],
 		"variables": {
 			"file": {
-				"type": "String"
+				"type": "Boolean"
 			}
 		},
 		"folder": {
