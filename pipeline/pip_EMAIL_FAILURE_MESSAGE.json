@@ -5,8 +5,6 @@
 			{
 				"name": "EMAIL_FAILURE",
 				"type": "WebActivity",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data1",
@@ -24,7 +22,11 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"method": "POST"
+					"method": "POST",
+					"body": {
+						"value": "{\n\"PipelineName\": \"@{pipeline().Pipeline}\",\n\"DataFactoryName\": \"@{pipeline().DataFactory}\",\n\"RunIDs\": \"@{pipeline().RunId}\",\n\"ErrorMessage\": \"@{activity('Copy data1').output.errors[0].Message}\"\n}",
+						"type": "Expression"
+					}
 				}
 			},
 			{
