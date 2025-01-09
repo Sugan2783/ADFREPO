@@ -1,5 +1,5 @@
 {
-	"name": "Delimited_EMP_SRC",
+	"name": "FILEEXISTS_TGT",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "BlobLinkedService",
@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "abc.csv",
-				"folderPath": "source/ASSIGNMENT",
+				"fileName": "tgt_file_exists.csv",
+				"folderPath": "target",
 				"fileSystem": "data"
 			},
 			"columnDelimiter": ",",
@@ -21,14 +21,17 @@
 		},
 		"schema": [
 			{
-				"name": "emp_id",
+				"name": "Channel_Ref_Key",
 				"type": "String"
 			},
 			{
-				"name": "name",
+				"name": "Channel_ID",
+				"type": "String"
+			},
+			{
+				"name": "Channel_Type",
 				"type": "String"
 			}
 		]
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }
