@@ -11,10 +11,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
-		"BlobLinkedService_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'BlobLinkedService'"
-		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "datacloudserver.database.windows.net"
@@ -27,9 +23,9 @@
 			"type": "string",
 			"defaultValue": "suganthib"
 		},
-		"BlobLinkedService_properties_typeProperties_url": {
+		"LS_KEYVAULT_DEV_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://suganthistoragenew.dfs.core.windows.net/"
+			"defaultValue": "https://KV-DEV-SUGANTHI.vault.azure.net/"
 		}
 	},
 	"variables": {
@@ -391,18 +387,14 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BlobLinkedService')]",
+			"name": "[concat(parameters('factoryName'), '/LS_KEYVAULT_DEV')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureBlobFS",
+				"type": "AzureKeyVault",
 				"typeProperties": {
-					"url": "[parameters('BlobLinkedService_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('BlobLinkedService_accountKey')]"
-					}
+					"baseUrl": "[parameters('LS_KEYVAULT_DEV_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []

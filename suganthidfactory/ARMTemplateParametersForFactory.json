@@ -8,9 +8,6 @@
 		"AzureSqlDatabase1_password": {
 			"value": ""
 		},
-		"BlobLinkedService_accountKey": {
-			"value": ""
-		},
 		"Oracle1_connectionString": {
 			"value": ""
 		},
@@ -25,6 +22,9 @@
 		},
 		"BlobLinkedService_properties_typeProperties_url": {
 			"value": "https://suganthistoragenew.dfs.core.windows.net/"
+		},
+		"LS_KEYVAULT_DEV_properties_typeProperties_baseUrl": {
+			"value": "https://KV-DEV-SUGANTHI.vault.azure.net/"
 		},
 		"EVENTBASEDTRIGGER_properties_typeProperties_scope": {
 			"value": "/subscriptions/6cda72ae-09db-4ac7-a49f-757ca002a156/resourceGroups/SUGANTHI_RGROUP/providers/Microsoft.Storage/storageAccounts/suganthistoragenew"

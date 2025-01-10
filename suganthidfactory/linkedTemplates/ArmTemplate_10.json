@@ -13,7 +13,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_SALES_FACT')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow_CUSTOMER_REVIEW_FACT')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -25,89 +25,40 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "order",
+								"referenceName": "MEMBER_LOYALTY",
 								"type": "DatasetReference"
 							},
-							"name": "ORDER"
+							"name": "MEMBERLOYALTY"
 						},
 						{
 							"dataset": {
-								"referenceName": "orderline",
+								"referenceName": "CUSTOMER_DIM",
 								"type": "DatasetReference"
 							},
-							"name": "ORDERLINE"
+							"name": "CUSTOMERDIM"
 						},
 						{
 							"dataset": {
-								"referenceName": "CUSTDIM",
+								"referenceName": "STORE_LOCATION_DIM",
 								"type": "DatasetReference"
 							},
-							"name": "CUSTOMERSDIM"
-						},
-						{
-							"dataset": {
-								"referenceName": "LOCDIMPROJ",
-								"type": "DatasetReference"
-							},
-							"name": "LOCATIONSDIM"
-						},
-						{
-							"dataset": {
-								"referenceName": "PRODUCTDIMPROJ",
-								"type": "DatasetReference"
-							},
-							"name": "PRODUCTDIM"
-						},
-						{
-							"dataset": {
-								"referenceName": "PROD_TOPDIM_PROJ",
-								"type": "DatasetReference"
-							},
-							"name": "PRODUCTTOPPINGDIM"
-						},
-						{
-							"dataset": {
-								"referenceName": "DelimitedText_PROMOTION",
-								"type": "DatasetReference"
-							},
-							"name": "PROMOTIONDIM"
-						},
-						{
-							"dataset": {
-								"referenceName": "payment_ref",
-								"type": "DatasetReference"
-							},
-							"name": "PAYMENTREF"
-						},
-						{
-							"dataset": {
-								"referenceName": "DELIVERY_METHOD",
-								"type": "DatasetReference"
-							},
-							"name": "DELIVERYREF"
-						},
-						{
-							"dataset": {
-								"referenceName": "CHANNELREF_PROJ",
-								"type": "DatasetReference"
-							},
-							"name": "CHANNELREF"
+							"name": "STORELOACTION"
 						},
 						{
 							"dataset": {
 								"referenceName": "DATE_PROJ",
 								"type": "DatasetReference"
 							},
-							"name": "DATE"
+							"name": "DATEDIM"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "SALES_FACT_PROJ_NEW",
+								"referenceName": "CUST_REVIEW_FACT",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "CUSTREVEWFACT"
 						}
 					],
 					"transformations": [
@@ -121,25 +72,7 @@
 							"name": "join3"
 						},
 						{
-							"name": "join4"
-						},
-						{
-							"name": "join5"
-						},
-						{
-							"name": "join6"
-						},
-						{
-							"name": "join7"
-						},
-						{
-							"name": "join8"
-						},
-						{
-							"name": "join9"
-						},
-						{
-							"name": "join10"
+							"name": "derivedColumn1"
 						},
 						{
 							"name": "select1"
@@ -147,41 +80,28 @@
 					],
 					"scriptLines": [
 						"source(output(",
-						"          ORDER_ID as integer,",
+						"          MEMBER_ID as integer,",
 						"          ORDER_DATE as date,",
-						"          ORDER_STATUS as string,",
-						"          TOTAL_AMOUNT as decimal(10,2),",
-						"          TOTAL_TAX as decimal(10,2),",
-						"          TIPS as decimal(10,2),",
-						"          TOTAL_QUANTITY as integer,",
-						"          DELIVERY_ID as integer,",
-						"          CHANNEL_ID as integer,",
+						"          INITIAL_POINTS_RECEIVED_DATE as date,",
+						"          INITIAL_REWARD_POINTS as short,",
+						"          LAST_EARNED_POINTS as integer,",
+						"          TOTAL_POINTS_EARNED as integer,",
+						"          REMAINING_POINTS as integer,",
+						"          IS_ACTIVE as boolean,",
 						"          STORE_LOCATION_ID as integer,",
-						"          CUSTOMER_ID as integer,",
-						"          PAYMENT_ID as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> ORDER",
-						"source(output(",
-						"          ORDER_LINE_ID as integer,",
-						"          UNIT_PRICE as decimal(10,0) '2',",
-						"          QUANTITY as integer,",
-						"          PROMOTION_AMOUNT as decimal(10,2),",
-						"          PROMOTION_ID as integer,",
 						"          ORDER_ID as integer,",
-						"          PRODUCT_ID as integer,",
-						"          PRODUCT_TOPPING_ID as integer",
+						"          CUSTOMER_ID as integer",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> ORDERLINE",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> MEMBERLOYALTY",
 						"source(output(",
 						"          CUSTOMER_DIM_KEY as integer,",
 						"          CUSTOMER_ID as integer,",
 						"          CUSTOMER_FIRST_NAME as string,",
 						"          CUSTOMER_LAST_NAME as string,",
-						"          IS_LOYAL as boolean,",
+						"          IS_LOYAL as string,",
 						"          PRIMARY_EMAIL as string,",
 						"          SECONDARY_EMAIL as string,",
 						"          PRIMARY_PHONE_NUMBER as string,",
@@ -191,21 +111,21 @@
 						"          R_City_Name as string,",
 						"          R_State_Name as string,",
 						"          R_Country_Name as string,",
-						"          R_Zip_Code as integer,",
-						"          R_Gate_Code as boolean,",
+						"          R_Zip_Code as string,",
+						"          R_Gate_Code as string,",
 						"          O_ADDRESS_LANE1 as string,",
 						"          O_ADDRESS_LANE2 as string,",
 						"          O_CITY_NAME as string,",
 						"          O_STATE_NAME as string,",
 						"          O_COUNTRY_NAME as string,",
-						"          O_ZIP_CODE as integer,",
-						"          O_GATE_CODE as integer,",
+						"          O_ZIP_CODE as string,",
+						"          O_GATE_CODE as string,",
 						"          JOINING_DATE as date,",
 						"          STG_CREATE_DATE as date",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> CUSTOMERSDIM",
+						"     ignoreNoFilesFound: false) ~> CUSTOMERDIM",
 						"source(output(",
 						"          Loc_Dim_Key as integer,",
 						"          Store_Location_ID as integer,",
@@ -219,83 +139,7 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> LOCATIONSDIM",
-						"source(output(",
-						"          Surr_Product_kEY as integer,",
-						"          Product_ID as integer,",
-						"          Product_Name as string,",
-						"          Product_Price as string,",
-						"          Is_Active as string,",
-						"          PRODUCT_CATEGORY_ID as integer,",
-						"          Product_Category_Name as string,",
-						"          Product_SubCategory_ID as integer,",
-						"          Product_SubCategory_Name as string,",
-						"          Product_Size as string,",
-						"          Product_Description as string,",
-						"          Eff_Start_Date as date,",
-						"          Eff_End_Date as date,",
-						"          DIM_CREATE_DATE as date,",
-						"          FLAG as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> PRODUCTDIM",
-						"source(output(",
-						"          Product_Dim_Key as integer,",
-						"          Product_Topping_ID as integer,",
-						"          Topping_Name as string,",
-						"          Topping_Price as decimal(10,2),",
-						"          Is_Active as string,",
-						"          Flag as string,",
-						"          Effective_Date as date,",
-						"          End_Date as date,",
-						"          Stg_Create_Date as date",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> PRODUCTTOPPINGDIM",
-						"source(output(",
-						"          PROMOTION_DIM_KEY as integer,",
-						"          PROMOTION_ID as integer,",
-						"          PROMOTION_NAME as string,",
-						"          PREVIOUS_PROMOTION_NAME as string,",
-						"          PROMOTION_TYPE as string,",
-						"          PREVIOUS_PROMOTION_TYPE as string,",
-						"          DISCOUNT_AMOUNT as string,",
-						"          PREVIOUS_DISCOUNT_AMOUNT as string,",
-						"          START_DATE as date,",
-						"          PREVIOUS_START_DATE as date,",
-						"          END_DATE as date,",
-						"          PREVIOUS_END_DATE as date,",
-						"          STG_CREATE_DATE as date",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> PROMOTIONDIM",
-						"source(output(",
-						"          PAYMENT_REF_KEY as integer,",
-						"          PAYMENT_ID as integer,",
-						"          PAYMENT_TYPE as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> PAYMENTREF",
-						"source(output(",
-						"          Delivery_Type_Ref_Key as integer,",
-						"          Delivery_ID as integer,",
-						"          Delivery_Type as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> DELIVERYREF",
-						"source(output(",
-						"          Channel_Ref_Key as integer,",
-						"          Channel_ID as integer,",
-						"          Channel_Type as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> CHANNELREF",
+						"     ignoreNoFilesFound: false) ~> STORELOACTION",
 						"source(output(",
 						"          DATE_KEY as integer,",
 						"          DAY_YYYY_MM_DD as string,",
@@ -303,7 +147,7 @@
 						"          DAY_US_LONG as string,",
 						"          DAY_US_M_D_YY as string,",
 						"          WEEK_SHORT as string,",
-						"          WEEK_NUMBER as integer,",
+						"          WEEK_NUMBER as short,",
 						"          WEEK_LONG as string,",
 						"          MONTH_IN_QUARTER_NUMBER as string,",
 						"          MONTH_IN_YEAR_SHORT as string,",
@@ -315,7 +159,7 @@
 						"          WEEK_WK_YEAR as string,",
 						"          WEEK_WK_QTR_YEAR_CONT as string,",
 						"          DAY_IN_WEEK_SHORT as string,",
-						"          DAY_IN_WEEK_NUMBER as integer,",
+						"          DAY_IN_WEEK_NUMBER as short,",
 						"          DAY_IN_WEEK_LONG as string,",
 						"          MONTH_SHORT as string,",
 						"          MONTH_NUMBER as string,",
@@ -325,125 +169,610 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> DATE",
-						"ORDER, ORDERLINE join(ORDER@ORDER_ID == ORDERLINE@ORDER_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join1",
-						"join1, CUSTOMERSDIM join(ORDER@CUSTOMER_ID == CUSTOMERSDIM@CUSTOMER_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join2",
-						"join2, LOCATIONSDIM join(ORDER@STORE_LOCATION_ID == LOCATIONSDIM@Store_Location_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join3",
-						"join3, PRODUCTDIM join(ORDERLINE@PRODUCT_ID == PRODUCTDIM@Product_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join4",
-						"join4, PRODUCTTOPPINGDIM join(ORDERLINE@PRODUCT_TOPPING_ID == PRODUCTTOPPINGDIM@Product_Topping_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join5",
-						"join5, PROMOTIONDIM join(ORDERLINE@PROMOTION_ID == PROMOTIONDIM@PROMOTION_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join6",
-						"join6, PAYMENTREF join(ORDER@PAYMENT_ID == PAYMENTREF@PAYMENT_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join7",
-						"join7, DELIVERYREF join(ORDER@DELIVERY_ID == DELIVERYREF@Delivery_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join8",
-						"join8, CHANNELREF join(ORDER@CHANNEL_ID == CHANNELREF@Channel_ID,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join9",
-						"join9, DATE join(ORDER_DATE == DAY_US_MM_DD_YYYY,",
+						"     ignoreNoFilesFound: false) ~> DATEDIM",
+						"MEMBERLOYALTY, CUSTOMERDIM join(MEMBERLOYALTY@CUSTOMER_ID == CUSTOMERDIM@CUSTOMER_ID,",
 						"     joinType:'inner',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join10",
-						"join10 select(mapColumn(",
-						"          ORDER_LINE_ID,",
-						"          ORDER_ID = ORDER@ORDER_ID,",
-						"          {CUSTOMER_DIM_KEY } = CUSTOMER_DIM_KEY,",
-						"          {PAYMENT_REF_KEY } = PAYMENT_REF_KEY,",
-						"          {CHANNEL_REF_KEY } = Channel_Ref_Key,",
-						"          {DELIVERY_TYPE_REF_KEY } = Delivery_Type_Ref_Key,",
-						"          {TOPPING_DIM_KEY } = Surr_Product_kEY,",
-						"          {LOCATION_DIM_KEY } = Loc_Dim_Key,",
-						"          Product_Dim_Key,",
-						"          PROMOTION_DIM_KEY,",
+						"     broadcast: 'auto')~> join1",
+						"join1, STORELOACTION join(MEMBERLOYALTY@STORE_LOCATION_ID == STORELOACTION@Store_Location_ID,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join2",
+						"join2, DATEDIM join(ORDER_DATE == DAY_US_MM_DD_YYYY,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join3",
+						"join3 derive(DIM_CREATE_DATE = currentDate()) ~> derivedColumn1",
+						"derivedColumn1 select(mapColumn(",
+						"          MEMBER_ID,",
+						"          TOTAL_POINTS_EARNED,",
+						"          REMAINING_POINTS,",
+						"          IS_ACTIVE,",
+						"          STORE_LOCATION_ID = MEMBERLOYALTY@STORE_LOCATION_ID,",
+						"          CUSTOMER_DIM_KEY,",
 						"          DATE_KEY,",
-						"          {ORDER_DATE } = ORDER_DATE,",
-						"          {ORDER_STATUS } = ORDER_STATUS,",
-						"          QUANTITY,",
-						"          UNIT_PRICE,",
-						"          Topping_Price,",
-						"          PROMOTION_AMOUNT,",
-						"          DM_CREATE_DATE = DIM_CREATE_DATE",
+						"          DIM_CREATE_DATE",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
 						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          ORDER_LINE_ID as string,",
-						"          ORDER_ID as string,",
-						"          {CUSTOMER_DIM_KEY } as string,",
-						"          {PAYMENT_REF_KEY } as string,",
-						"          {CHANNEL_REF_KEY } as string,",
-						"          {DELIVERY_TYPE_REF_KEY } as string,",
-						"          {TOPPING_DIM_KEY } as string,",
-						"          {LOCATION_DIM_KEY } as string,",
-						"          Product_Dim_Key as string,",
-						"          PROMOTION_DIM_KEY as string,",
-						"          DATE_KEY as string,",
-						"          {ORDER_DATE } as string,",
-						"          {ORDER_STATUS } as string,",
-						"          QUANTITY as string,",
-						"          UNIT_PRICE as string,",
-						"          Topping_Price as string,",
-						"          PROMOTION_AMOUNT as string,",
-						"          DM_CREATE_DATE as string",
-						"     ),",
-						"     partitionFileNames:['SALES_FACT.csv'],",
+						"     partitionFileNames:['CUSTOMER_REVIEW_FACT.csv'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          ORDER_LINE_ID,",
-						"          ORDER_ID,",
-						"          {CUSTOMER_DIM_KEY },",
-						"          {PAYMENT_REF_KEY },",
-						"          {TOPPING_DIM_KEY },",
-						"          {LOCATION_DIM_KEY },",
-						"          Product_Dim_Key,",
-						"          PROMOTION_DIM_KEY,",
-						"          DATE_KEY,",
-						"          {ORDER_DATE },",
-						"          {ORDER_STATUS },",
-						"          QUANTITY,",
-						"          UNIT_PRICE,",
-						"          Topping_Price,",
-						"          PROMOTION_AMOUNT,",
-						"          DM_CREATE_DATE",
+						"     partitionBy('hash', 1)) ~> CUSTREVEWFACT"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_CUSTOMER_STG')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "PROJECT_STG",
+								"type": "DatasetReference"
+							},
+							"name": "STGCUSTOMERS"
+						},
+						{
+							"dataset": {
+								"referenceName": "CUST_ADD",
+								"type": "DatasetReference"
+							},
+							"name": "CUSTOMERADDRESS"
+						},
+						{
+							"dataset": {
+								"referenceName": "CUST_EMAIL",
+								"type": "DatasetReference"
+							},
+							"name": "CUSTEMAIL"
+						},
+						{
+							"dataset": {
+								"referenceName": "CUST_PHONE",
+								"type": "DatasetReference"
+							},
+							"name": "CUSTPHONE"
+						},
+						{
+							"dataset": {
+								"referenceName": "HUT_LOVER",
+								"type": "DatasetReference"
+							},
+							"name": "HUTLOVER"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_STG_CUSTOMER_JOINS",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "window1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "window2"
+						},
+						{
+							"name": "filter2"
+						},
+						{
+							"name": "window3"
+						},
+						{
+							"name": "filter3"
+						},
+						{
+							"name": "join2"
+						},
+						{
+							"name": "join3"
+						},
+						{
+							"name": "join4"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter4"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "surrogateKey1"
+						},
+						{
+							"name": "select2"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          CUSTOMER_ID as short,",
+						"          CUSTOMER_FIRST_NAME as string,",
+						"          CUSTOMER_LAST_NAME as string,",
+						"          CUSTOMER_DOB as string,",
+						"          CUSTOMER_TYPE as string,",
+						"          IS_LOYAL as boolean,",
+						"          FIRST_PURCHASE_DATE as string",
 						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> STGCUSTOMERS",
+						"source(output(",
+						"          Customer_Address_ID as short,",
+						"          Address_Lane1 as string,",
+						"          Address_Lane_2 as string,",
+						"          City_Name as string,",
+						"          State_Name as string,",
+						"          Country_Name as string,",
+						"          Zip_Code as integer,",
+						"          Gate_Code as short,",
+						"          Address_Type as string,",
+						"          Address_Status as string,",
+						"          Customer_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> CUSTOMERADDRESS",
+						"source(output(",
+						"          CUSTOMER_EMAIL_ID as string,",
+						"          CUSTOMER_EMAIL as string,",
+						"          CUSTOMER_EMAIL_TYPE as string,",
+						"          CUSTOMER_EMAIL_STATUS as string,",
+						"          CUSTOMER_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> CUSTEMAIL",
+						"source(output(",
+						"          CUSTOMER_PHONE_NUMBER_ID as string,",
+						"          CUSTOMER_PHONE_NUMBER as string,",
+						"          CUSTOMER_PHONE_TYPE as string,",
+						"          CUSTOMER_PHONE_STATUS as string,",
+						"          CUSTOMER_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> CUSTPHONE",
+						"source(output(",
+						"          HUT_LOVERS_ID as string,",
+						"          JOINING_DATE as string,",
+						"          IS_ACTIVE as string,",
+						"          MEMBER_ID as string,",
+						"          CUSTMOER_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> HUTLOVER",
+						"STGCUSTOMERS, derivedColumn1 join(STGCUSTOMERS@CUSTOMER_ID == CUSTOMERADDRESS@Customer_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"CUSTPHONE window(over(CUSTOMER_ID),",
+						"     desc(CUSTOMER_PHONE_TYPE, true),",
+						"     SECONDARY_PHONE_NUMBER = lead(CUSTOMER_PHONE_NUMBER),",
+						"          RN_PH = rowNumber()) ~> window1",
+						"window1 filter(RN_PH==1) ~> filter1",
+						"CUSTEMAIL window(over(CUSTOMER_ID),",
+						"     asc(CUSTOMER_EMAIL_TYPE, true),",
+						"     SECONDARY_EMAIL = lead(CUSTOMER_EMAIL),",
+						"          RN_EMAIL = rowNumber()) ~> window2",
+						"window2 filter(RN_EMAIL==1) ~> filter2",
+						"filter4 window(over(Customer_ID),",
+						"     desc(Address_Type, true),",
+						"     O_ADDRESS_LANE1 = lead(Address_Lane1),",
+						"          O_ADDRESS_LANE2 = lead(Address_Lane_2),",
+						"          O_CITY_NAME = lead(City_Name),",
+						"          O_STATE_NAME = lead(State_Name),",
+						"          O_COUNTRY_NAME = lead(Country_Name),",
+						"          O_ZIP_CODE = lead(Zip_Code),",
+						"          O_GATE_CODE = lead(Gate_Code),",
+						"          RN_ADDRESS = rowNumber(),",
+						"     partitionBy('hash', 1)) ~> window3",
+						"window3 filter(RN_ADDRESS==1) ~> filter3",
+						"join1, filter1 join(STGCUSTOMERS@CUSTOMER_ID == CUSTPHONE@CUSTOMER_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join2",
+						"join2, filter2 join(STGCUSTOMERS@CUSTOMER_ID == CUSTEMAIL@CUSTOMER_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join3",
+						"join3, HUTLOVER join(STGCUSTOMERS@CUSTOMER_ID == CUSTMOER_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join4",
+						"join4 select(mapColumn(",
+						"          CUSTOMER_ID = STGCUSTOMERS@CUSTOMER_ID,",
+						"          CUSTOMER_FIRST_NAME,",
+						"          CUSTOMER_LAST_NAME,",
+						"          IS_LOYAL,",
+						"          PRIMARY_EMAIL = CUSTOMER_EMAIL,",
+						"          SECONDARY_EMAIL,",
+						"          PRIMARY_PHONE_NUMBER = CUSTOMER_PHONE_NUMBER,",
+						"          SECONDARY_PHONE_NUMBER,",
+						"          R_Address_Lane1 = Address_Lane1,",
+						"          R_Address_Lane_2 = Address_Lane_2,",
+						"          R_City_Name = City_Name,",
+						"          R_State_Name = State_Name,",
+						"          R_Country_Name = Country_Name,",
+						"          R_Zip_Code = Zip_Code,",
+						"          R_Gate_Code = Gate_Code,",
+						"          O_ADDRESS_LANE1,",
+						"          O_ADDRESS_LANE2,",
+						"          O_CITY_NAME,",
+						"          O_STATE_NAME,",
+						"          O_COUNTRY_NAME,",
+						"          O_ZIP_CODE,",
+						"          O_GATE_CODE,",
+						"          JOINING_DATE",
+						"     ),",
+						"     partitionBy('hash', 1),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"CUSTOMERADDRESS filter(Address_Status=='Active') ~> filter4",
+						"filter3 derive(O_ADDRESS_LANE1 = case(Address_Type=='Office', Address_Lane1,O_ADDRESS_LANE1),",
+						"          O_ADDRESS_LANE2 = case(Address_Type=='Office', Address_Lane_2,O_ADDRESS_LANE2),",
+						"          O_CITY_NAME = case(Address_Type=='Office', City_Name,O_CITY_NAME),",
+						"          O_STATE_NAME = case(Address_Type=='Office', State_Name,O_STATE_NAME),",
+						"          O_COUNTRY_NAME = case(Address_Type=='Office', Country_Name,O_COUNTRY_NAME),",
+						"          O_ZIP_CODE = case(Address_Type=='Office', Zip_Code,O_ZIP_CODE),",
+						"          O_GATE_CODE = case(Address_Type=='Office', Gate_Code,O_GATE_CODE),",
+						"          Address_Lane1 = case(Address_Type == 'Office','NULL',Address_Lane1),",
+						"          Address_Lane_2 = case(Address_Type == 'Office','NULL',Address_Lane_2),",
+						"          City_Name = case(Address_Type == 'Office','NULL',City_Name),",
+						"          State_Name = case(Address_Type == 'Office','NULL',State_Name),",
+						"          Country_Name = case(Address_Type == 'Office','NULL',Country_Name),",
+						"          Zip_Code = case(Address_Type == 'Office',0,Zip_Code),",
+						"          Gate_Code = case(Address_Type == 'Office',0)) ~> derivedColumn1",
+						"surrogateKey1 derive(STG_CREATE_DATE = currentDate()) ~> derivedColumn2",
+						"select1 keyGenerate(output(CUSTOMER_DIM_KEY as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"derivedColumn2 select(mapColumn(",
+						"          CUSTOMER_DIM_KEY,",
+						"          CUSTOMER_ID,",
+						"          CUSTOMER_FIRST_NAME,",
+						"          CUSTOMER_LAST_NAME,",
+						"          IS_LOYAL,",
+						"          PRIMARY_EMAIL,",
+						"          SECONDARY_EMAIL,",
+						"          PRIMARY_PHONE_NUMBER,",
+						"          SECONDARY_PHONE_NUMBER,",
+						"          R_Address_Lane1,",
+						"          R_Address_Lane_2,",
+						"          R_City_Name,",
+						"          R_State_Name,",
+						"          R_Country_Name,",
+						"          R_Zip_Code,",
+						"          R_Gate_Code,",
+						"          O_ADDRESS_LANE1,",
+						"          O_ADDRESS_LANE2,",
+						"          O_CITY_NAME,",
+						"          O_STATE_NAME,",
+						"          O_COUNTRY_NAME,",
+						"          O_ZIP_CODE,",
+						"          O_GATE_CODE,",
+						"          JOINING_DATE,",
+						"          STG_CREATE_DATE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     partitionBy('hash', 1),",
+						"     preCommands: [],",
+						"     postCommands: []) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_DELIVERY_METHOD_REF')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DELIVERY_METHOD",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSql_DELIVERY_REF_SCD1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          DELIVERY_ID as string,",
+						"          DELIVERY_TYPE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(STG_CREATE_DATE = currentDate()) ~> derivedColumn1",
+						"derivedColumn1 alterRow(upsertIf(1==1)) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Delivery_Type_Ref_key as integer,",
+						"          Delivery_Type_ID as integer,",
+						"          Delivery_Type as string,",
+						"          STG_CREATE_DATE as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:false,",
+						"     upsertable:true,",
+						"     keys:['Delivery_Type_ID'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          Delivery_Type_ID = DELIVERY_ID,",
+						"          Delivery_Type = DELIVERY_TYPE,",
+						"          STG_CREATE_DATE",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_DERIVED')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SRC_DERIVED",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Delimited_derived",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "DelimitedText3",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						},
+						{
+							"dataset": {
+								"referenceName": "DelimitedText4",
+								"type": "DatasetReference"
+							},
+							"name": "sink3"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "split1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as string,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as string,",
+						"          COMMISSION_PCT as string,",
+						"          MANAGER_ID as string,",
+						"          DEPARTMENT_ID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source1",
+						"source1 derive(COUNTRY_CODE = concat('+',PHONE_NUMBER),",
+						"          valid_nvalid_email = iif(substring(EMAIL, -10)=='@gmail.com','valid','invalid'),",
+						"     partitionBy('hash', 1)) ~> derivedColumn1",
+						"derivedColumn1 split(valid_nvalid_email=='valid',",
+						"     valid_nvalid_email=='invalid',",
+						"     disjoint: true) ~> split1@(emailvalid, EMAILINVALID, DEFAULT)",
+						"split1@emailvalid sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          COUNTRY_ID as string,",
+						"          COUNTRY_NAME as string,",
+						"          REGION_ID as string",
+						"     ),",
+						"     partitionFileNames:['vaild_email.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1",
+						"split1@DEFAULT sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          COUNTRY_ID as string,",
+						"          COUNTRY_NAME as string,",
+						"          REGION_ID as string",
+						"     ),",
+						"     partitionFileNames:['email_invalid.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink2",
+						"split1@EMAILINVALID sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          COUNTRY_ID as string,",
+						"          COUNTRY_NAME as string,",
+						"          REGION_ID as string",
+						"     ),",
+						"     partitionFileNames:['tgt_emailinvalid.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink3"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_FILENAME_COLUMN')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ASSIGNMENT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Delimited_DEPT_SRC",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Delimited_TGTDEPT",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "cast1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          DEPARTMENT_ID as short,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as short,",
+						"          LOCATION_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 cast(output(",
+						"          DEPARTMENT_ID as integer,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as integer,",
+						"          LOCATION_ID as integer",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"cast1 derive(FILE_NAME = 'DEPARTMENTS.csv') ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          DEPARTMENT_ID as string,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as string,",
+						"          LOCATION_ID as string",
+						"     ),",
+						"     partitionFileNames:['TGT_DEPT_FILENAME.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> sink1"
 					]
 				}
@@ -451,10 +780,433 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_SQLDB')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow_FILTER')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "src_not_parameterized",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "tgt_not_parameterized",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "cast1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as short,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as timestamp,",
+						"          JOB_ID as string,",
+						"          SALARY as integer,",
+						"          COMMISSION_PCT as double,",
+						"          MANAGER_ID as short,",
+						"          DEPARTMENT_ID as short,",
+						"          SK as string",
+						"     ),",
+						"     allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"cast1 select(mapColumn(",
+						"          EMPLOYEE_ID,",
+						"          FIRST_NAME",
+						"     ),",
+						"     partitionBy('hash', 1),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 filter(EMPLOYEE_ID==100) ~> filter1",
+						"source1 cast(output(",
+						"          EMPLOYEE_ID as integer '000'",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          EMPLOYEE_ID as string,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as string,",
+						"          COMMISSION_PCT as string,",
+						"          MANAGER_ID as string,",
+						"          DEPARTMENT_ID as string,",
+						"          SK as string",
+						"     ),",
+						"     partitionFileNames:['TGT_DATAFLOW_CONTROL.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_HARD_DELETE')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Delimited_EMP_SRC",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_EMP",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_EMP",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as short,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as double,",
+						"          COMMISSION_PCT as double,",
+						"          MANAGER_ID as short,",
+						"          DEPARTMENT_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          EMPLOYEE_ID as integer,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as decimal(10,2),",
+						"          COMMISSION_PCT as decimal(10,2),",
+						"          MANAGER_ID as integer,",
+						"          DEPARTMENT_ID as integer,",
+						"          DEPARTMENT_NAME as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source2",
+						"source1, source2 join(source1@EMPLOYEE_ID == source2@EMPLOYEE_ID,",
+						"     joinType:'right',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 alterRow(deleteIf(isNull(source1@EMPLOYEE_ID))) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:true,",
+						"     insertable:false,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     keys:['EMPLOYEE_ID'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          EMPLOYEE_ID = source2@EMPLOYEE_ID,",
+						"          FIRST_NAME = source1@FIRST_NAME,",
+						"          LAST_NAME = source1@LAST_NAME,",
+						"          EMAIL = source1@EMAIL,",
+						"          PHONE_NUMBER = source1@PHONE_NUMBER,",
+						"          HIRE_DATE = source1@HIRE_DATE,",
+						"          JOB_ID = source1@JOB_ID,",
+						"          SALARY = source1@SALARY,",
+						"          COMMISSION_PCT = source1@COMMISSION_PCT,",
+						"          MANAGER_ID = source1@MANAGER_ID,",
+						"          DEPARTMENT_ID = source1@DEPARTMENT_ID",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_JOINS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "src_not_parameterized",
+								"type": "DatasetReference"
+							},
+							"name": "EMP"
+						},
+						{
+							"dataset": {
+								"referenceName": "DelimitedText11",
+								"type": "DatasetReference"
+							},
+							"name": "DEPT"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText10",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as short,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as timestamp,",
+						"          JOB_ID as string,",
+						"          SALARY as double,",
+						"          COMMISSION_PCT as double,",
+						"          MANAGER_ID as short,",
+						"          DEPARTMENT_ID as short,",
+						"          SK as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> EMP",
+						"source(output(",
+						"          DEPARTMENT_ID as integer,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as integer,",
+						"          LOCATION_ID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> DEPT",
+						"EMP, DEPT join(EMP@DEPARTMENT_ID == DEPT@DEPARTMENT_ID,",
+						"     joinType:'right',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 select(mapColumn(",
+						"          EMPLOYEE_ID,",
+						"          FIRST_NAME,",
+						"          LAST_NAME,",
+						"          EMAIL,",
+						"          PHONE_NUMBER,",
+						"          HIRE_DATE,",
+						"          JOB_ID,",
+						"          SALARY,",
+						"          COMMISSION_PCT,",
+						"          MANAGER_ID = EMP@MANAGER_ID,",
+						"          DEPARTMENT_ID = EMP@DEPARTMENT_ID,",
+						"          DEPARTMENT_ID = DEPT@DEPARTMENT_ID,",
+						"          DEPARTMENT_NAME,",
+						"          MANAGER_ID = DEPT@MANAGER_ID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          DEPARTMENT_ID as string,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as string,",
+						"          LOCATION_ID as string",
+						"     ),",
+						"     partitionFileNames:['JOINS_EMP_DEPT.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_JOINS_CUSTOMJOIN')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "src_not_parameterized",
+								"type": "DatasetReference"
+							},
+							"name": "EMP"
+						},
+						{
+							"dataset": {
+								"referenceName": "DelimitedText11",
+								"type": "DatasetReference"
+							},
+							"name": "DEPT"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText10",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as short,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as timestamp,",
+						"          JOB_ID as string,",
+						"          SALARY as double,",
+						"          COMMISSION_PCT as double,",
+						"          MANAGER_ID as short,",
+						"          DEPARTMENT_ID as short,",
+						"          SK as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> EMP",
+						"source(output(",
+						"          DEPARTMENT_ID as integer,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as integer,",
+						"          LOCATION_ID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> DEPT",
+						"EMP, DEPT join(EMPLOYEE_ID==100,",
+						"     joinType:'cross',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 select(mapColumn(",
+						"          EMPLOYEE_ID,",
+						"          DEPARTMENT_ID = EMP@DEPARTMENT_ID,",
+						"          DEPARTMENT_ID = DEPT@DEPARTMENT_ID,",
+						"          DEPARTMENT_NAME,",
+						"          MANAGER_ID = DEPT@MANAGER_ID",
+						"     ),",
+						"     partitionBy('hash', 1),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          DEPARTMENT_ID as string,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as string,",
+						"          LOCATION_ID as string",
+						"     ),",
+						"     partitionFileNames:['JOINS_EMP_DEPT.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_JOIN_DEPT_EMP_ASSIGN')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ASSIGNMENT_DATAFLOW"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
@@ -476,7 +1228,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "AzureSqlTable_EMP",
+								"referenceName": "Delimited_EMP_TGT",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -484,7 +1236,10 @@
 					],
 					"transformations": [
 						{
-							"name": "alterRow1"
+							"name": "cast1"
+						},
+						{
+							"name": "cast2"
 						},
 						{
 							"name": "join1"
@@ -495,6 +1250,32 @@
 					],
 					"scriptLines": [
 						"source(output(",
+						"          EMPLOYEE_ID as short,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as double,",
+						"          COMMISSION_PCT as double,",
+						"          MANAGER_ID as short,",
+						"          DEPARTMENT_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source1",
+						"source(output(",
+						"          DEPARTMENT_ID as short,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as short,",
+						"          LOCATION_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source2",
+						"source1 cast(output(",
 						"          EMPLOYEE_ID as integer,",
 						"          FIRST_NAME as string,",
 						"          LAST_NAME as string,",
@@ -507,20 +1288,15 @@
 						"          MANAGER_ID as integer,",
 						"          DEPARTMENT_ID as integer",
 						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source(output(",
+						"     errors: true) ~> cast1",
+						"source2 cast(output(",
 						"          DEPARTMENT_ID as integer,",
 						"          DEPARTMENT_NAME as string,",
 						"          MANAGER_ID as integer,",
 						"          LOCATION_ID as integer",
 						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source2",
-						"select1 alterRow(upsertIf(1==1)) ~> alterRow1",
-						"source1, source2 join(source1@DEPARTMENT_ID == source2@DEPARTMENT_ID,",
+						"     errors: true) ~> cast2",
+						"cast1, cast2 join(cast1@DEPARTMENT_ID == cast2@DEPARTMENT_ID,",
 						"     joinType:'inner',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
@@ -535,44 +1311,34 @@
 						"          JOB_ID,",
 						"          SALARY,",
 						"          COMMISSION_PCT,",
+						"          MANAGER_ID = cast1@MANAGER_ID,",
+						"          DEPARTMENT_ID = cast2@DEPARTMENT_ID,",
 						"          DEPARTMENT_NAME,",
-						"          LOCATION_ID,",
-						"          DEPARTMENT_ID = source1@DEPARTMENT_ID",
+						"          MANAGER_ID = cast2@MANAGER_ID,",
+						"          LOCATION_ID",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
-						"alterRow1 sink(allowSchemaDrift: true,",
+						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:false,",
-						"     updateable:false,",
-						"     upsertable:true,",
-						"     keys:['EMPLOYEE_ID'],",
-						"     format: 'table',",
+						"     input(",
+						"          emp_id as string,",
+						"          name as string",
+						"     ),",
+						"     partitionFileNames:['TGT_JOIN_EMP_DEPT_ASSIGN.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          EMPLOYEE_ID,",
-						"          FIRST_NAME,",
-						"          LAST_NAME,",
-						"          EMAIL,",
-						"          PHONE_NUMBER,",
-						"          HIRE_DATE,",
-						"          JOB_ID,",
-						"          SALARY,",
-						"          COMMISSION_PCT,",
-						"          LOCATION_ID,",
-						"          DEPARTMENT_ID,",
-						"          DEPARTMENT_NAME",
-						"     )) ~> sink1"
+						"     partitionBy('hash', 1)) ~> sink1"
 					]
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_UNION')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow_LKP_LOC')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -581,31 +1347,17 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "Delimited_UNION",
+								"referenceName": "Delimited_EMP_SRC",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
 						},
 						{
 							"dataset": {
-								"referenceName": "Delimited_UNION2",
+								"referenceName": "DelimitedText11",
 								"type": "DatasetReference"
 							},
 							"name": "source2"
-						},
-						{
-							"dataset": {
-								"referenceName": "Delimited_UNION3",
-								"type": "DatasetReference"
-							},
-							"name": "source3"
-						},
-						{
-							"dataset": {
-								"referenceName": "Delimited_UNION4",
-								"type": "DatasetReference"
-							},
-							"name": "source4"
 						}
 					],
 					"sinks": [
@@ -619,47 +1371,76 @@
 					],
 					"transformations": [
 						{
-							"name": "union1"
+							"name": "cast1"
+						},
+						{
+							"name": "cast2"
+						},
+						{
+							"name": "lookup1"
+						},
+						{
+							"name": "select1"
 						}
 					],
 					"scriptLines": [
 						"source(output(",
-						"          DEPT_ID as short,",
-						"          DEPT_NAME as string",
+						"          LOCATION_ID as short,",
+						"          STREET_ADDRESS as string,",
+						"          POSTAL_CODE as string,",
+						"          CITY as string,",
+						"          STATE_PROVINCE as string,",
+						"          COUNTRY_ID as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
 						"     partitionBy('hash', 1)) ~> source1",
 						"source(output(",
-						"          DEPT_ID as short,",
-						"          DEPT_NAME as string",
+						"          DEPARTMENT_ID as string,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as string,",
+						"          LOCATION_ID as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source2",
-						"source(output(",
-						"          DEPT_ID as short,",
-						"          DEPT_NAME as string",
+						"source1 cast(output(",
+						"          LOCATION_ID as integer,",
+						"          STREET_ADDRESS as string,",
+						"          POSTAL_CODE as string,",
+						"          CITY as string",
 						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source3",
-						"source(output(",
-						"          DEPT_ID as short,",
-						"          DEPT_NAME as string",
+						"     errors: true) ~> cast1",
+						"source2 cast(output(",
+						"          DEPARTMENT_ID as integer,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as string,",
+						"          LOCATION_ID as integer",
 						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source4",
-						"source1, source2, source3, source4 union(byName: true)~> union1",
-						"union1 sink(allowSchemaDrift: true,",
+						"     errors: true) ~> cast2",
+						"cast1, cast2 lookup(cast1@LOCATION_ID == cast2@LOCATION_ID,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     partitionBy('hash', 1),",
+						"     broadcast: 'auto')~> lookup1",
+						"lookup1 select(mapColumn(",
+						"          LOCATION_ID = cast1@LOCATION_ID,",
+						"          STREET_ADDRESS,",
+						"          CITY,",
+						"          COUNTRY_ID,",
+						"          DEPARTMENT_ID,",
+						"          DEPARTMENT_NAME",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          emp_id as string,",
 						"          name as string",
 						"     ),",
-						"     partitionFileNames:['DEPT_UNION.csv'],",
+						"     partitionFileNames:['LKP_DEPT_LOC.csv'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -672,10 +1453,912 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_WINDOW')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow_LOCATION_STG')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "STG_LOCATION",
+								"type": "DatasetReference"
+							},
+							"name": "STGSTORELOCATION"
+						},
+						{
+							"dataset": {
+								"referenceName": "STG_STATE_LOCATION",
+								"type": "DatasetReference"
+							},
+							"name": "STGSTATELOCATION"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "SQLDB_LOCATIONS",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "surrogateKey1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select2"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          STORE_LOCATION_ID as short,",
+						"          STORE_NAME as string,",
+						"          STORE_ADDRESS as string,",
+						"          STORE_PHONE_NUMBER as string,",
+						"          STORE_OPEN_TIME as string,",
+						"          STORE_CLOSE_TIME as string,",
+						"          STATE_COUNTRY_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> STGSTORELOCATION",
+						"source(output(",
+						"          STATE_COUNTRY_ID as short,",
+						"          STATE_NAME as string,",
+						"          STATE_ABBREVATION as string,",
+						"          STATE_COUNTRY as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> STGSTATELOCATION",
+						"STGSTORELOCATION, STGSTATELOCATION join(STGSTORELOCATION@STATE_COUNTRY_ID == STGSTATELOCATION@STATE_COUNTRY_ID,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 select(mapColumn(",
+						"          STORE_LOCATION_ID,",
+						"          STORE_NAME,",
+						"          STORE_ADDRESS,",
+						"          STORE_PHONE_NUMBER,",
+						"          STORE_OPEN_TIME,",
+						"          STORE_CLOSE_TIME,",
+						"          STATE_NAME,",
+						"          STATE_COUNTRY",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 keyGenerate(output(LOCATION_DIM_KEY as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1 derive(CREATE_USER_DATE = currentDate()) ~> derivedColumn1",
+						"derivedColumn1 select(mapColumn(",
+						"          LOCATION_DIM_KEY,",
+						"          STORE_LOCATION_ID,",
+						"          STORE_NAME,",
+						"          STORE_ADDRESS,",
+						"          STORE_PHONE_NUMBER,",
+						"          STORE_OPEN_TIME,",
+						"          STORE_CLOSE_TIME,",
+						"          STATE_NAME,",
+						"          STATE_COUNTRY,",
+						"          CREATE_USER_DATE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     partitionBy('hash', 1),",
+						"     preCommands: [],",
+						"     postCommands: []) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_LOOKUP')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Delimited_EMP_SRC",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "DelimitedText11",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Delimited_EMP_TGT",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "lookup1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as integer,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as double,",
+						"          COMMISSION_PCT as double,",
+						"          MANAGER_ID as short,",
+						"          DEPARTMENT_ID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          DEPARTMENT_ID as integer,",
+						"          DEPARTMENT_NAME as string,",
+						"          MANAGER_ID as string,",
+						"          LOCATION_ID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source2",
+						"source1, source2 lookup(source1@DEPARTMENT_ID == source2@DEPARTMENT_ID,",
+						"     multiple: false,",
+						"     pickup: 'first',",
+						"     asc(source2@DEPARTMENT_ID, true),",
+						"     partitionBy('hash', 1),",
+						"     broadcast: 'auto')~> lookup1",
+						"lookup1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          emp_id as string,",
+						"          name as string",
+						"     ),",
+						"     partitionFileNames:['EMP_DEPT_LKP.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PAYMENT_REF_SCD1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "payment_ref",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AZURE_PAYMENT_REF",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PAYMENT_ID as integer,",
+						"          PAYMENT_TYPE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(STG_CREATE_DATE = currentDate()) ~> derivedColumn1",
+						"derivedColumn1 alterRow(upsertIf(1==1)) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Payment_Ref_Key as integer,",
+						"          Payment_ID as integer,",
+						"          Payment_Type as string,",
+						"          STG_CREATE_DATE as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:false,",
+						"     upsertable:true,",
+						"     keys:['Payment_ID'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          Payment_ID = PAYMENT_ID,",
+						"          Payment_Type = PAYMENT_TYPE,",
+						"          STG_CREATE_DATE",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PIVOT')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Delimited_EMP_SRC",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "pivot1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as short,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as double,",
+						"          COMMISSION_PCT as double,",
+						"          MANAGER_ID as short,",
+						"          DEPARTMENT_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 pivot(groupBy(DEPARTMENT_ID),",
+						"     pivotBy(JOB_ID),",
+						"     JOBID = count(JOB_ID),",
+						"     columnNaming: '$N$V',",
+						"     lateral: true) ~> pivot1",
+						"pivot1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PRODUCT_STG')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "PRODUCT_STG",
+								"type": "DatasetReference"
+							},
+							"name": "STGPRODUCT"
+						},
+						{
+							"dataset": {
+								"referenceName": "STG_PRODUCT_CATEGORY",
+								"type": "DatasetReference"
+							},
+							"name": "STGPRODUCTCATEGORY"
+						},
+						{
+							"dataset": {
+								"referenceName": "STG_PRODUCT_SUB_CATEGORY",
+								"type": "DatasetReference"
+							},
+							"name": "STGPROSUBCATEGORY"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "PRODUCT_DIM",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "join2"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select2"
+						},
+						{
+							"name": "surrogateKey1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PRODUCT_ID as short,",
+						"          PRODUCT_NAME as string,",
+						"          PRODUCT_PRICE as string,",
+						"          PRODUCT_DESCRIPTION as string,",
+						"          CALORIES as string,",
+						"          IS_ACTIVE as string,",
+						"          PRODUCT_SUBCATEGORY_ID as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> STGPRODUCT",
+						"source(output(",
+						"          PRODUCT_CATEGORY_ID as short,",
+						"          PRODUCT_CATEGORY_NAME as string,",
+						"          PRODUCT_CATEGORY_DESCRIPTION as string,",
+						"          IS_ACTIVE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> STGPRODUCTCATEGORY",
+						"source(output(",
+						"          PRODUCT_SUBCATEGORY_ID as short,",
+						"          PRODUCT_SUBCATEGORY_NAME as string,",
+						"          PRODUCT_SIZE as string,",
+						"          PRODUCT_CATEGORY_ID as short,",
+						"          IS_ACTIVE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> STGPROSUBCATEGORY",
+						"STGPRODUCT, STGPROSUBCATEGORY join(STGPRODUCT@PRODUCT_SUBCATEGORY_ID == STGPROSUBCATEGORY@PRODUCT_SUBCATEGORY_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1, STGPRODUCTCATEGORY join(STGPROSUBCATEGORY@PRODUCT_CATEGORY_ID == STGPRODUCTCATEGORY@PRODUCT_CATEGORY_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join2",
+						"derivedColumn1 select(mapColumn(",
+						"          PRODUCT_ID,",
+						"          PRODUCT_NAME,",
+						"          PRODUCT_PRICE,",
+						"          PRODUCT_DESCRIPTION,",
+						"          CALORIES,",
+						"          IS_ACTIVE = STGPRODUCT@IS_ACTIVE,",
+						"          PRODUCT_SUBCATEGORY_ID = STGPROSUBCATEGORY@PRODUCT_SUBCATEGORY_ID,",
+						"          PRODUCT_SUBCATEGORY_NAME,",
+						"          PRODUCT_SIZE,",
+						"          IS_ACTIVE = STGPROSUBCATEGORY@IS_ACTIVE,",
+						"          PRODUCT_CATEGORY_ID = STGPRODUCTCATEGORY@PRODUCT_CATEGORY_ID,",
+						"          PRODUCT_CATEGORY_NAME,",
+						"          PRODUCT_CATEGORY_DESCRIPTION,",
+						"          IS_ACTIVE = STGPRODUCTCATEGORY@IS_ACTIVE,",
+						"          CREATE_USER_DATE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"join2 derive(PRODUCT_PRICE = replace(PRODUCT_PRICE, '$', ''),",
+						"          CREATE_USER_DATE = currentDate()) ~> derivedColumn1",
+						"surrogateKey1 select(mapColumn(",
+						"          PRODUCT_DIM_KEY,",
+						"          PRODUCT_ID,",
+						"          PRODUCT_NAME,",
+						"          PRODUCT_PRICE,",
+						"          PRODUCT_DESCRIPTION,",
+						"          IS_ACTIVE,",
+						"          PRODUCT_SUBCATEGORY_ID,",
+						"          PRODUCT_SUBCATEGORY_NAME,",
+						"          PRODUCT_SIZE,",
+						"          PRODUCT_CATEGORY_NAME,",
+						"          PRODUCT_CATEGORY_ID,",
+						"          CREATE_USER_DATE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select1 keyGenerate(output(PRODUCT_DIM_KEY as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"select2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          PRODUCT_DIM_KEY,",
+						"          PRODUCT_ID,",
+						"          PRODUCT_NAME,",
+						"          PRODUCT_PRICE,",
+						"          PRODUCT_DESCRIPTION,",
+						"          IS_ACTIVE,",
+						"          PRODUCT_SUBCATEGORY_ID,",
+						"          PRODUCT_SUBCATEGORY_NAME,",
+						"          PRODUCT_SIZE,",
+						"          PRODUCT_CATEGORY_NAME,",
+						"          PRODUCT_CATEGORY_ID,",
+						"          CREATE_USER_DATE",
+						"     ),",
+						"     partitionBy('hash', 1),",
+						"     preCommands: [],",
+						"     postCommands: []) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PRODUCT_TOPPINGS_STG')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "product_topping",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "azure_prod_topp",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PRODUCT_TOPPING_ID as integer,",
+						"          TOPPING_NAME as string,",
+						"          TOPING_PRICE as string,",
+						"          IS_ACTIVE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(TOPING_PRICE = toDecimal(replace(TOPING_PRICE, '$', ''))) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          PRODUCT_TOPPING_ID,",
+						"          TOPPING_NAME,",
+						"          TOPING_PRICE,",
+						"          IS_ACTIVE",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PROMOTIION_DIM_SCD3')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText_PROMOTION",
+								"type": "DatasetReference"
+							},
+							"name": "STGPROMOTIONS"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMOTION",
+								"type": "DatasetReference"
+							},
+							"name": "PROMOTIONDIM"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMOTION",
+								"type": "DatasetReference"
+							},
+							"name": "INSERT"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMOTION",
+								"type": "DatasetReference"
+							},
+							"name": "UPDATE"
+						}
+					],
+					"transformations": [
+						{
+							"name": "lookup1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "filter2"
+						},
+						{
+							"name": "ALTER"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "cast1"
+						},
+						{
+							"name": "derivedColumn3"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PROMOTION_ID as integer,",
+						"          PROMOTION_NAME as string,",
+						"          PROMOTION_TYPE as string,",
+						"          DISCOUNT_AMOUNT as string,",
+						"          START_DATE as date,",
+						"          END_DATE as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> STGPROMOTIONS",
+						"source(output(",
+						"          PROMOTION_DIM_KEY as integer,",
+						"          PROMOTION_ID as integer,",
+						"          PROMOTION_NAME as string,",
+						"          PREVIOUS_PROMOTION_NAME as string,",
+						"          PROMOTION_TYPE as string,",
+						"          PREVIOUS_PROMOTION_TYPE as string,",
+						"          DISCOUNT_AMOUNT as decimal(5,2),",
+						"          PREVIOUS_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          START_DATE as date,",
+						"          PREVIOUS_START_DATE as date,",
+						"          END_DATE as date,",
+						"          PREVIOUS_END_DATE as date,",
+						"          STG_CREATE_DATE as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> PROMOTIONDIM",
+						"derivedColumn2, select1 lookup(PROMOTION_ID == TGT_PROMOTION_ID,",
+						"     multiple: true,",
+						"     broadcast: 'auto')~> lookup1",
+						"lookup1 derive(SRC_MD5 = md5(concat(PROMOTION_NAME,PROMOTION_TYPE,toString(DISCOUNT_AMOUNT),toString(START_DATE),toString(END_DATE))),",
+						"          STG_CREATE_DATE = currentDate(),",
+						"          TGT_MD5 = md5(concat(TGT_PROMOTION_NAME,toString(TGT_PROMOTION_TYPE),toString(TGT_DISCOUNT_AMOUNT),toString(TGT_START_DATE),toString(TGT_END_DATE))),",
+						"          DISCOUNT_AMOUNT = toDecimal(DISCOUNT_AMOUNT, 5, 2)) ~> derivedColumn1",
+						"derivedColumn1 filter(!isNull(TGT_PROMOTION_ID) && SRC_MD5 != TGT_MD5) ~> filter1",
+						"derivedColumn1 filter(isNull(TGT_PROMOTION_ID)  && SRC_MD5 != TGT_MD5) ~> filter2",
+						"derivedColumn3 alterRow(updateIf(1==1)) ~> ALTER",
+						"STGPROMOTIONS derive(DISCOUNT_AMOUNT = toDecimal(replace(toString(DISCOUNT_AMOUNT), '%', ''))) ~> derivedColumn2",
+						"cast1 select(mapColumn(",
+						"          PROMOTION_DIM_KEY,",
+						"          TGT_PROMOTION_ID = PROMOTION_ID,",
+						"          TGT_PROMOTION_NAME = PROMOTION_NAME,",
+						"          TGT_PREVIOUS_PROMOTION_NAME = PREVIOUS_PROMOTION_NAME,",
+						"          TGT_PROMOTION_TYPE = PROMOTION_TYPE,",
+						"          TGT_PREVIOUS_PROMOTION_TYPE = PREVIOUS_PROMOTION_TYPE,",
+						"          TGT_DISCOUNT_AMOUNT = DISCOUNT_AMOUNT,",
+						"          TGT_PREVIOUS_DISCOUNT_AMOUNT = PREVIOUS_DISCOUNT_AMOUNT,",
+						"          TGT_START_DATE = START_DATE,",
+						"          TGT_PREVIOUS_START_DATE = PREVIOUS_START_DATE,",
+						"          TGT_END_DATE = END_DATE,",
+						"          TGT_PREVIOUS_END_DATE = PREVIOUS_END_DATE,",
+						"          TGT_STG_CREATE_DATE = STG_CREATE_DATE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"PROMOTIONDIM cast(output(",
+						"          PROMOTION_DIM_KEY as integer,",
+						"          PROMOTION_ID as integer,",
+						"          PROMOTION_NAME as string,",
+						"          PREVIOUS_PROMOTION_NAME as string,",
+						"          PROMOTION_TYPE as string,",
+						"          PREVIOUS_PROMOTION_TYPE as string,",
+						"          DISCOUNT_AMOUNT as decimal(5,2),",
+						"          PREVIOUS_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          START_DATE as date,",
+						"          PREVIOUS_START_DATE as date,",
+						"          END_DATE as date,",
+						"          PREVIOUS_END_DATE as date,",
+						"          STG_CREATE_DATE as date",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"filter1 derive(PROMOTION_NAME1 = iif(PROMOTION_NAME != TGT_PROMOTION_NAME,TGT_PROMOTION_NAME,''),",
+						"          PROMOTION_TYPE1 = iif(PROMOTION_TYPE != TGT_PROMOTION_TYPE,TGT_PROMOTION_TYPE,''),",
+						"          DISCOUNT_AMOUNT1 = iif(DISCOUNT_AMOUNT != TGT_DISCOUNT_AMOUNT,TGT_DISCOUNT_AMOUNT,toDecimal(0)),",
+						"          START_DATE1 = iif(START_DATE != TGT_START_DATE, TGT_START_DATE,toDate(null())),",
+						"          END_DATE1 = iif(END_DATE != TGT_END_DATE, TGT_END_DATE,toDate(null()))) ~> derivedColumn3",
+						"filter2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          PROMOTION_DIM_KEY as integer,",
+						"          PROMOTION_ID as integer,",
+						"          PROMOTION_NAME as string,",
+						"          PREVIOUS_PROMOTION_NAME as string,",
+						"          PROMOTION_TYPE as string,",
+						"          PREVIOUS_PROMOTION_TYPE as string,",
+						"          DISCOUNT_AMOUNT as decimal(5,2),",
+						"          PREVIOUS_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          START_DATE as date,",
+						"          PREVIOUS_START_DATE as date,",
+						"          END_DATE as date,",
+						"          PREVIOUS_END_DATE as date,",
+						"          STG_CREATE_DATE as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          PROMOTION_ID,",
+						"          PROMOTION_NAME,",
+						"          PROMOTION_TYPE,",
+						"          DISCOUNT_AMOUNT,",
+						"          START_DATE,",
+						"          END_DATE,",
+						"          STG_CREATE_DATE",
+						"     )) ~> INSERT",
+						"ALTER sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          PROMOTION_DIM_KEY as integer,",
+						"          PROMOTION_ID as integer,",
+						"          PROMOTION_NAME as string,",
+						"          PREVIOUS_PROMOTION_NAME as string,",
+						"          PROMOTION_TYPE as string,",
+						"          PREVIOUS_PROMOTION_TYPE as string,",
+						"          DISCOUNT_AMOUNT as decimal(5,2),",
+						"          PREVIOUS_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          START_DATE as date,",
+						"          PREVIOUS_START_DATE as date,",
+						"          END_DATE as date,",
+						"          PREVIOUS_END_DATE as date,",
+						"          STG_CREATE_DATE as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['PROMOTION_DIM_KEY'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          PROMOTION_DIM_KEY,",
+						"          PROMOTION_ID,",
+						"          PROMOTION_NAME,",
+						"          PREVIOUS_PROMOTION_NAME = PROMOTION_NAME1,",
+						"          PROMOTION_TYPE,",
+						"          PREVIOUS_PROMOTION_TYPE = PROMOTION_TYPE1,",
+						"          DISCOUNT_AMOUNT,",
+						"          PREVIOUS_DISCOUNT_AMOUNT = DISCOUNT_AMOUNT1,",
+						"          START_DATE,",
+						"          PREVIOUS_START_DATE = START_DATE1,",
+						"          END_DATE,",
+						"          PREVIOUS_END_DATE = END_DATE1,",
+						"          STG_CREATE_DATE",
+						"     )) ~> UPDATE"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PROMOTION_STG_DB')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ASSIGNMENT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText_PROMOTION",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMOTION_STG",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PROMOTION_ID as integer,",
+						"          PROMOTION_NAME as string,",
+						"          PROMOTION_TYPE as string,",
+						"          DISCOUNT_AMOUNT as string,",
+						"          START_DATE as date,",
+						"          END_DATE as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(DISCOUNT_AMOUNT = replace(DISCOUNT_AMOUNT,'%','')) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          PROMOTION_ID,",
+						"          PROMOTION_NAME,",
+						"          PROMOTION_TYPE,",
+						"          DISCOUNT_AMOUNT,",
+						"          START_DATE,",
+						"          END_DATE",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_SALARY_10PERCENT_INCREASE')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ASSIGNMENT_DATAFLOW"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
@@ -698,15 +2381,15 @@
 					],
 					"transformations": [
 						{
-							"name": "window1"
+							"name": "cast1"
 						},
 						{
-							"name": "select1"
+							"name": "derivedColumn1"
 						}
 					],
 					"scriptLines": [
 						"source(output(",
-						"          EMPLOYEE_ID as integer,",
+						"          EMPLOYEE_ID as short,",
 						"          FIRST_NAME as string,",
 						"          LAST_NAME as string,",
 						"          EMAIL as string,",
@@ -716,47 +2399,33 @@
 						"          SALARY as double,",
 						"          COMMISSION_PCT as double,",
 						"          MANAGER_ID as short,",
-						"          DEPARTMENT_ID as integer",
+						"          DEPARTMENT_ID as short",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 window(asc(SALARY, true),",
-						"     NEXT_SALARY = lead(SALARY),",
-						"          LAST_SALARY = lag(SALARY),",
-						"          LAG_UNBOUNDED = lag(SALARY,2),",
-						"          LEAD_UNBOUNDED = lead(SALARY, 2),",
-						"          DENSE_RANK = denseRank(),",
-						"          ROW_NUMBER = rowNumber(),",
-						"          RANK = rank(),",
-						"          SUM = sum(SALARY),",
-						"          COUNT = count(EMPLOYEE_ID),",
-						"          AVERAGE = avg(SALARY),",
-						"          FIRST_VALUE = first(DEPARTMENT_ID),",
-						"          LAST_VALUE = last(DEPARTMENT_ID),",
-						"          MIN = min(SALARY),",
-						"          MAX = max(SALARY)) ~> window1",
-						"window1 select(mapColumn(",
-						"          EMPLOYEE_ID,",
-						"          DEPARTMENT_ID,",
-						"          SALARY,",
-						"          LEAD_SALARY = NEXT_SALARY,",
-						"          LAG_SALARY = LAST_SALARY,",
-						"          LAG_PREV_2SAL = LAG_UNBOUNDED,",
-						"          DENSE_RANK,",
-						"          ROW_NUMBER,",
-						"          DENSE_RANK",
+						"source1 cast(output(",
+						"          EMPLOYEE_ID as integer,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as date,",
+						"          JOB_ID as string,",
+						"          SALARY as decimal(10,2),",
+						"          COMMISSION_PCT as decimal(10,2),",
+						"          MANAGER_ID as integer,",
+						"          DEPARTMENT_ID as integer",
 						"     ),",
-						"     partitionBy('hash', 1),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 sink(allowSchemaDrift: true,",
+						"     errors: true) ~> cast1",
+						"cast1 derive(NEW_SALARY = SALARY + (SALARY * (10/100))) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          emp_id as string,",
 						"          name as string",
 						"     ),",
-						"     partitionFileNames:['TGT_LEADLAG_SAL.csv'],",
+						"     partitionFileNames:['TGT_SAL_10_PER_INCREMENT.csv'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -765,1709 +2434,6 @@
 						"     partitionBy('hash', 1)) ~> sink1"
 					]
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PIP_COUNTRY_NEW')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": {
-									"value": "@concat('select * from hr.countries where country_id=''',concat(activity('Lookup1').output.firstRow.country_id),'''')",
-									"type": "Expression"
-								},
-								"partitionOption": "None",
-								"convertDecimalToInteger": false,
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DC_COUNTRY",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "src_not_parameterized",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "VAR_CID_ASSIGN",
-							"value": "'AR'"
-						}
-					},
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM LOCATIONS WHERE COUNTRY_ID='CA'",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "DC_COUNTRY",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"COUNTRY_ID": {
-						"type": "string",
-						"defaultValue": "'CA'"
-					}
-				},
-				"variables": {
-					"VAR_CID": {
-						"type": "String",
-						"defaultValue": "1"
-					},
-					"VAR_CID_ASSIGN": {
-						"type": "String",
-						"defaultValue": "'CA'"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-26T02:59:12Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PIP_DATA_DB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "OracleTable1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "TGT_COUNTRY_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGT_TABLE": {
-										"value": "@pipeline().parameters.TPARAM_COUNTRY",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"TPARAM_COUNTRY": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-22T03:54:04Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PIP_EXEC2_WAIT')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_wildcard_copy1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_EXEC_P1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Wait1",
-						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 10
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-08T03:08:07Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_CONFIGFILE_DATALOAD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM HR.CONFIG where activeflag = 1",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "SRC_ORACLETABLE",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup1').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Set variable1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "OracleSource",
-											"oracleReaderQuery": {
-												"value": "@item().query",
-												"type": "Expression"
-											},
-											"partitionOption": "None",
-											"convertDecimalToInteger": false,
-											"queryTimeout": "02:00:00"
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "SRC_DataLoad",
-											"type": "DatasetReference",
-											"parameters": {
-												"SOURCETABLE": {
-													"value": "@item().sourcetable",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "Tgt_DataLoad",
-											"type": "DatasetReference",
-											"parameters": {
-												"TARGETFILE": {
-													"value": "@item().TARETTABLE",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "startdate",
-										"value": {
-											"value": "@utcNow()",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"startdate": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-11-05T01:59:20Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_DATAFLOW_CONDSPLIT')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow CONDITIONAL SPLIT",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow_ALL_FUNCTIONS",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"EMP": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "DATAFLOW_PIPE"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-11-14T00:02:26Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_DB_COUNTRY_QUERY')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM HR.COUNTRIES\nWHERE REGION_ID=3",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Oracle_QUERY",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "TGT_COUNTRY_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGT_TABLE": {
-										"value": "@pipeline().parameters.QUERYCON",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"QUERYCON": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-22T03:54:04Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_DB_COUNTRY_QUERY_PARAM')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Oracle_QUERY",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "TGT_COUNTRY_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGT_TABLE": {
-										"value": "@pipeline().parameters.TGTTABLE",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"SRCTABLE": {
-						"type": "string"
-					},
-					"TGTTABLE": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-22T03:54:04Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_DB_COUNTRY_QUERY_VARIABLE')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM HR.COUNTRIES\nWHERE REGION_ID=3",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Oracle_QUERY",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "TGT_COUNTRY_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGT_TABLE": {
-										"value": "@pipeline().parameters.QUERYCON",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"QUERYCON": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-23T02:06:26Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_DB_PARAM_PRAC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DB_PARAM_PRAC",
-								"type": "DatasetReference",
-								"parameters": {
-									"TABLE_NAME": {
-										"value": "@pipeline().parameters.SOURCE_DB",
-										"type": "Expression"
-									},
-									"SCHEMA": {
-										"value": "@pipeline().parameters.SRC_SCHEMA",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "BLOB_DB_EMP_PRAC",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGT_PARAM_EMP": {
-										"value": "@pipeline().parameters.TARGET_DB",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"SOURCE_DB": {
-						"type": "string"
-					},
-					"TARGET_DB": {
-						"type": "string"
-					},
-					"SRC_SCHEMA": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-23T03:21:35Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_DB_PARAM_PRAC_QUERY_NEW')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DB_PARAM_PRAC",
-								"type": "DatasetReference",
-								"parameters": {
-									"TABLE_NAME": {
-										"value": "@pipeline().parameters.SOURCE_DB",
-										"type": "Expression"
-									},
-									"SCHEMA": {
-										"value": "@pipeline().parameters.SRC_SCHEMA",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "BLOB_DB_EMP_PRAC",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGT_PARAM_EMP": {
-										"value": "@pipeline().parameters.TARGET_DB",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM DEPARTMENTS WHERE DEPARTMENT_ID = 50",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "LKP_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"LKP_TABLE_NAME": {
-										"value": "@pipeline().parameters.LKP_TABLE_NAME_P",
-										"type": "Expression"
-									},
-									"LKP_SCHEMA_NAME": "HR"
-								}
-							}
-						}
-					},
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "VARIDEPTID",
-							"value": {
-								"value": "@variables('VARDEPTNEW')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"SOURCE_DB": {
-						"type": "string"
-					},
-					"TARGET_DB": {
-						"type": "string"
-					},
-					"SRC_SCHEMA": {
-						"type": "string"
-					},
-					"LKP_TABLE_NAME_P": {
-						"type": "string"
-					},
-					"LKP_SCHEMA_P": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"VARIDEPTID": {
-						"type": "String"
-					},
-					"VARDEPTNEW": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-24T04:16:42Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_EXECUTE')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_wildcard_copy1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_wildcard_copy1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-08T02:38:09Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_JOIN')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow_JOINS",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"EMP": {},
-									"DEPT": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-11-12T02:18:17Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_JOIN_TWOTABLES_ORACLE')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT E.SRC_EMPLOYEE_ID,E.SRC_FIRST_NAME,E.SRC_LAST_NAME,E.SRC_DEPARTMENT_ID,D.DEPARTMENT_NAME,D.MANAGER_ID,D.LOCATION_ID  FROM HR.TGT_EMP_DEPT_DT E\nINNER JOIN HR.DEPARTMENTS D\nON E.SRC_DEPARTMENT_ID = D.DEPARTMENT_ID",
-								"partitionOption": "None",
-								"convertDecimalToInteger": false,
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "OracleSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Oracle_JOIN_EMP_DEPT",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Oracle_TGT_JOINTWO_TABLES",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGTTABLE": {
-										"value": "@pipeline().parameters.TGT_EMP_DEPT_JOIN",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"TGT_EMP_DEPT_JOIN": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ASSIGNMENTS"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-11-19T03:55:15Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_LKP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM EMPLOYEES WHERE DEPARTMENT_ID = 50",
-								"partitionOption": "None",
-								"convertDecimalToInteger": false,
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "LKP_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"LKP_TABLE_NAME": {
-										"value": "@pipeline().parameters.DEPARTMENT_ID",
-										"type": "Expression"
-									},
-									"LKP_SCHEMA_NAME": "HR"
-								}
-							}
-						}
-					},
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM EMPLOYEES ",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Oracle_QUERY",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DB_LKP_EMP",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "VARDEPARTMENT",
-							"value": {
-								"value": "@pipeline().parameters.DEPARTMENT_ID",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"DEPARTMENT_ID": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"VARDEPARTMENT": {
-						"type": "String",
-						"defaultValue": "20"
-					},
-					"VAR_DEPT_ID": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-23T03:35:43Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_MULTIPLE_TABLE_LOAD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM DATALOAD WHERE ACTIVEFLAG =1 ",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "TGT_Oracle_CONFIG_PRAC",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup1').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Set variable1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "OracleSource",
-											"oracleReaderQuery": {
-												"value": "@item().query",
-												"type": "Expression"
-											},
-											"partitionOption": "None",
-											"convertDecimalToInteger": false,
-											"queryTimeout": "02:00:00"
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "DB_DATALOAD_PRAC_PARAM",
-											"type": "DatasetReference",
-											"parameters": {
-												"SOURCETABLE": {
-													"value": "@item().SOURCETABLE",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DATALOAD_FILE_PRAC_PARA",
-											"type": "DatasetReference",
-											"parameters": {
-												"TARGETTABLE": {
-													"value": "@concat(item().TARGETTABLE,'.csv')",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "StartDate",
-										"value": {
-											"value": "@utcNow()",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "Script1",
-									"type": "Script",
-									"dependsOn": [
-										{
-											"activity": "Copy data1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"linkedServiceName": {
-										"referenceName": "Oracle1",
-										"type": "LinkedServiceReference"
-									},
-									"typeProperties": {
-										"scripts": [
-											{
-												"type": "Query",
-												"text": {
-													"value": "@concat('update hr.DATALOAD set startdate =  ''',variables('StartDate'),''' ,enddate = ''',utcNow(),''' ,status = ''success'''''',source = ''',activity('Copy data1').output.rowsRead,''',target = ''',activity('Copy data1').output.rowsCopied,'''  where sourcetable = ''',item().sourcetable,'''')",
-													"type": "Expression"
-												}
-											}
-										],
-										"scriptBlockExecutionTimeout": "02:00:00"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"StartDate": {
-						"type": "String"
-					},
-					"dummy": {
-						"type": "String"
-					},
-					"sourcetable": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "PARAMPATH"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-11-06T04:00:52Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_MULTIPLE_TABLE_LOAD_PRAC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM DATALOAD",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "TGT_Oracle_CONFIG_PRAC",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup1').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "OracleSource",
-											"oracleReaderQuery": {
-												"value": "@item().query",
-												"type": "Expression"
-											},
-											"partitionOption": "None",
-											"convertDecimalToInteger": false,
-											"queryTimeout": "02:00:00"
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "DB_DATALOAD_PRAC_PARAM",
-											"type": "DatasetReference",
-											"parameters": {
-												"SOURCETABLE": {
-													"value": "@item().SOURCETABLE",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DATALOAD_FILE_PRAC_PARA",
-											"type": "DatasetReference",
-											"parameters": {
-												"TARGETTABLE": {
-													"value": "@concat(item().TARGETTABLE,'.csv')",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "PARAMPATH"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-29T04:24:18Z"
 			},
 			"dependsOn": []
 		}
