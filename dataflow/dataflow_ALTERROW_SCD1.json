@@ -98,6 +98,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
+				"     outputRejectedData: true,",
 				"     mapColumn(",
 				"          EMPLOYEE_ID,",
 				"          FIRST_NAME,",
