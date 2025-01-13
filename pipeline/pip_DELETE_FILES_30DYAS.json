@@ -100,7 +100,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@less(activity('Get Metadata1').output.lastModified,formatDateTime(adddays(utcNow(),-20),'yyyy-mm-ddThh:mm:ssZ'))",
+									"value": "@less(activity('Get Metadata1').output.lastModified,addDays(utcNow(),-20))",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -133,7 +133,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"deletefile": {
-														"value": "@activity('Get Metadata2').output.itemName",
+														"value": "@endswith(activity('Get Metadata2').output.itemName,'.txt')",
 														"type": "Expression"
 													}
 												}
