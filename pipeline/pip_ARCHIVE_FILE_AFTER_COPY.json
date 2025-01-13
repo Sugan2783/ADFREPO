@@ -44,7 +44,13 @@
 				"inputs": [
 					{
 						"referenceName": "ARCHIEVE",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FILENAME": {
+								"value": "@variables('FILENAME')",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -65,6 +71,10 @@
 			"TABLENAME": {
 				"type": "String",
 				"defaultValue": "HR.DNORM"
+			},
+			"FILENAME": {
+				"type": "String",
+				"defaultValue": "NAME_CONCAT.txt"
 			}
 		},
 		"folder": {
