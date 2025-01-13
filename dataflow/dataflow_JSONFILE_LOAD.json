@@ -32,7 +32,7 @@
 			"scriptLines": [
 				"source(output(",
 				"          AUTHOR_UID as short,",
-				"          {CONTACT DETAILS} as ({Permanent address} as string, {current Address} as string),",
+				"          {CONTACT DETAILS} as ({Permanent address} as string, {current Address} as string)[],",
 				"          CUST_ID as short,",
 				"          FIRST_NAME as string,",
 				"          LAST_NAME as string,",
@@ -43,7 +43,7 @@
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'arrayOfDocuments',",
 				"     partitionBy('hash', 1)) ~> source1",
-				"source1 foldDown(unroll(CONTACT DETAILS, CONTACT DETAILS),",
+				"source1 foldDown(unroll(CONTACT DETAILS),",
 				"     mapColumn(",
 				"          AUTHOR_UID,",
 				"          CUST_ID,",
