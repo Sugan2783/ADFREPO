@@ -82,7 +82,7 @@
 			},
 			"TABLENAME": {
 				"type": "String",
-				"defaultValue": "DNORM"
+				"defaultValue": "DNORM1"
 			}
 		},
 		"folder": {
