@@ -1,0 +1,70 @@
+{
+	"name": "dataflow_JSONFILE_LOAD",
+	"properties": {
+		"folder": {
+			"name": "LEARN"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "JsonFILE_LOAD",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "JSON_FLATTEN",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          AUTHOR_UID as integer,",
+				"          CUST_ID as string,",
+				"          FIRST_NAME as string,",
+				"          MIDDLE_NAME as string,",
+				"          LAST_NAME as string,",
+				"          {CONTACT DETAILS} as (Address as ({Permanent address} as string, {current Address} as string), phoneNumbers as (type as string, number as string))[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments',",
+				"     partitionBy('hash', 1)) ~> source1",
+				"source1 foldDown(unroll(CONTACT DETAILS, CONTACT DETAILS),",
+				"     mapColumn(",
+				"          AUTHOR_UID,",
+				"          CUST_ID,",
+				"          FIRST_NAME,",
+				"          MIDDLE_NAME,",
+				"          LAST_NAME,",
+				"          {Permanent address} = {CONTACT DETAILS}.Address.{Permanent address},",
+				"          {current Address} = {CONTACT DETAILS}.Address.{current Address},",
+				"          phoneTYPE = {CONTACT DETAILS}.phoneNumbers.type,",
+				"          PHONENUMBER = {CONTACT DETAILS}.phoneNumbers.number",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

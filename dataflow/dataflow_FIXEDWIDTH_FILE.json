@@ -1,6 +1,9 @@
 {
 	"name": "dataflow_FIXEDWIDTH_FILE",
 	"properties": {
+		"folder": {
+			"name": "LEARN"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
