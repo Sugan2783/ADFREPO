@@ -61,6 +61,10 @@
 							"TABLENAME": {
 								"value": "@variables('TABLENAME')",
 								"type": "Expression"
+							},
+							"SCHEMA_NAME": {
+								"value": "@variables('SCHEMA_NAME')",
+								"type": "Expression"
 							}
 						}
 					}
@@ -68,13 +72,17 @@
 			}
 		],
 		"variables": {
-			"TABLENAME": {
-				"type": "String",
-				"defaultValue": "HR.DNORM"
-			},
 			"FILENAME": {
 				"type": "String",
 				"defaultValue": "NAME_CONCAT.txt"
+			},
+			"SCHEMA_NAME": {
+				"type": "String",
+				"defaultValue": "HR"
+			},
+			"TABLENAME": {
+				"type": "String",
+				"defaultValue": "DNORM"
 			}
 		},
 		"folder": {
