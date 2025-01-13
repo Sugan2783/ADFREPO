@@ -13,6 +13,188 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/CHANNELREF_PROJ')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "CHANNEL_REF_DIM.csv",
+						"folderPath": "target/AzureProject/DIMTABLE",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CHANNEL_REF')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "STG_CHANNEL.csv",
+						"folderPath": "target/AzureProject/Stg",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DATE_KEY",
+						"type": "String"
+					},
+					{
+						"name": "DAY_YYYY_MM_DD",
+						"type": "String"
+					},
+					{
+						"name": "DAY_US_MM_DD_YYYY",
+						"type": "String"
+					},
+					{
+						"name": "DAY_US_LONG",
+						"type": "String"
+					},
+					{
+						"name": "DAY_US_M_D_YY",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_LONG",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_IN_QUARTER_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_IN_YEAR_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_IN_YEAR_LONG",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_QTR_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_FROM_TO",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_STARTING",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_YEAR_CONT",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "WEEK_WK_QTR_YEAR_CONT",
+						"type": "String"
+					},
+					{
+						"name": "DAY_IN_WEEK_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "DAY_IN_WEEK_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DAY_IN_WEEK_LONG",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_SHORT",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "MONTH_LONG",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_SHORT_US",
+						"type": "String"
+					},
+					{
+						"name": "YEAR",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CUSTDIM')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "customers_dim.csv",
+						"folderPath": "target/AzureProject/DIMTABLE",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CUSTOMER_DIM')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -773,121 +955,6 @@
 					},
 					{
 						"name": "LOCATION_ID",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "BlobLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"foldername": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "TGT_FILENAME_CREATION.csv",
-						"folderPath": {
-							"value": "@concat('target/ForEach/',dataset().foldername)",
-							"type": "Expression"
-						},
-						"fileSystem": "data"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText3')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "BlobLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "TGT_DEFAULT.csv",
-						"folderPath": "target",
-						"fileSystem": "data"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "COUNTRY_ID",
-						"type": "String"
-					},
-					{
-						"name": "COUNTRY_NAME",
-						"type": "String"
-					},
-					{
-						"name": "REGION_ID",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText4')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "BlobLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "TGT_DEPT_90.csv",
-						"folderPath": "target",
-						"fileSystem": "data"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "COUNTRY_ID",
-						"type": "String"
-					},
-					{
-						"name": "COUNTRY_NAME",
-						"type": "String"
-					},
-					{
-						"name": "REGION_ID",
 						"type": "String"
 					}
 				]

@@ -13,6 +13,1097 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PRODUCT_DIM_FLAG')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "PRODUCT_DIM",
+								"type": "DatasetReference"
+							},
+							"name": "PRODUCTSDIMJOIN"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable4",
+								"type": "DatasetReference"
+							},
+							"name": "PRODUCTDIM"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable4",
+								"type": "DatasetReference"
+							},
+							"name": "UPDATE"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable4",
+								"type": "DatasetReference"
+							},
+							"name": "INSERT"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "lookup1"
+						},
+						{
+							"name": "derivedColumn4"
+						},
+						{
+							"name": "cast1"
+						},
+						{
+							"name": "filter3"
+						},
+						{
+							"name": "derivedColumn5"
+						},
+						{
+							"name": "select3"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "derivedColumn6"
+						},
+						{
+							"name": "filter4"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PRODUCT_DIM_KEY as long,",
+						"          PRODUCT_ID as short,",
+						"          PRODUCT_NAME as string,",
+						"          PRODUCT_PRICE as string,",
+						"          PRODUCT_DESCRIPTION as string,",
+						"          IS_ACTIVE as string,",
+						"          PRODUCT_SUBCATEGORY_ID as short,",
+						"          PRODUCT_SUBCATEGORY_NAME as string,",
+						"          PRODUCT_SIZE as string,",
+						"          PRODUCT_CATEGORY_NAME as string,",
+						"          PRODUCT_CATEGORY_ID as short,",
+						"          CREATE_USER_DATE as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> PRODUCTSDIMJOIN",
+						"source(output(",
+						"          Surr_Product_kEY as integer,",
+						"          Product_ID as integer,",
+						"          Product_Name as string,",
+						"          Product_Price as decimal(5,2),",
+						"          Is_Active as string,",
+						"          PRODUCT_CATEGORY_ID as string,",
+						"          Product_Category_Name as string,",
+						"          Product_SubCategory_ID as integer,",
+						"          Product_SubCategory_Name as string,",
+						"          Product_Size as string,",
+						"          Product_Description as string,",
+						"          Eff_Start_Date as date,",
+						"          Eff_End_Date as date,",
+						"          DIM_CREATE_DATE as date,",
+						"          FLAG as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'SELECT * FROM hr.PRODUCT_DIM_FLAG\\nWHERE FLAG == 1',",
+						"     format: 'query') ~> PRODUCTDIM",
+						"cast1 filter(IS_ACTIVE == 'Active') ~> filter1",
+						"filter1 derive(SRC_MD5 = md5(concat(PRODUCT_NAME,toString(PRODUCT_PRICE),PRODUCT_DESCRIPTION,toString(PRODUCT_SUBCATEGORY_ID),PRODUCT_SUBCATEGORY_NAME,PRODUCT_SIZE,PRODUCT_CATEGORY_NAME,toString(PRODUCT_CATEGORY_ID)))) ~> derivedColumn1",
+						"derivedColumn4 select(mapColumn(",
+						"          Surr_Product_kEY,",
+						"          Tgt_Product_ID = Product_ID,",
+						"          Tgt_Product_Name = Product_Name,",
+						"          Tgt_Product_Price = Product_Price,",
+						"          Tgt_Is_Active = Is_Active,",
+						"          Tgt_PRODUCT_CATEGORY_ID = PRODUCT_CATEGORY_ID,",
+						"          Tgt_Product_Category_Name = Product_Category_Name,",
+						"          Tgt_Product_SubCategory_ID = Product_SubCategory_ID,",
+						"          Tgt_Product_SubCategory_Name = Product_SubCategory_Name,",
+						"          Tgt_Product_Size = Product_Size,",
+						"          Tgt_Product_Description = Product_Description,",
+						"          Eff_Start_Date,",
+						"          Eff_End_Date,",
+						"          Tgt_DM_CREATE_DATE = DIM_CREATE_DATE,",
+						"          TGT_MD5,",
+						"          FLAG",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"derivedColumn1, select1 lookup(PRODUCT_ID == Tgt_Product_ID,",
+						"     multiple: true,",
+						"     broadcast: 'auto')~> lookup1",
+						"PRODUCTDIM derive(TGT_MD5 = md5(concat(Product_Name,toString(Product_Price),Product_Description,toString(Product_SubCategory_ID),Product_SubCategory_Name,Product_Size,Product_Category_Name,toString(PRODUCT_CATEGORY_ID)))) ~> derivedColumn4",
+						"PRODUCTSDIMJOIN cast(output(",
+						"          PRODUCT_DIM_KEY as integer,",
+						"          PRODUCT_ID as integer,",
+						"          PRODUCT_NAME as string,",
+						"          PRODUCT_PRICE as decimal(10,2),",
+						"          PRODUCT_DESCRIPTION as string,",
+						"          IS_ACTIVE as string,",
+						"          PRODUCT_SUBCATEGORY_ID as integer,",
+						"          PRODUCT_SUBCATEGORY_NAME as string,",
+						"          PRODUCT_SIZE as string,",
+						"          PRODUCT_CATEGORY_NAME as string,",
+						"          PRODUCT_CATEGORY_ID as integer,",
+						"          CREATE_USER_DATE as date",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"lookup1 filter(SRC_MD5 != TGT_MD5) ~> filter3",
+						"filter3 derive(Eff_End_Date = currentDate(),",
+						"          FLAG = 0) ~> derivedColumn5",
+						"derivedColumn6 select(mapColumn(",
+						"          PRODUCT_ID,",
+						"          PRODUCT_NAME,",
+						"          PRODUCT_PRICE,",
+						"          PRODUCT_DESCRIPTION,",
+						"          IS_ACTIVE,",
+						"          PRODUCT_SUBCATEGORY_ID,",
+						"          PRODUCT_SUBCATEGORY_NAME,",
+						"          PRODUCT_SIZE,",
+						"          PRODUCT_CATEGORY_NAME,",
+						"          PRODUCT_CATEGORY_ID,",
+						"          CREATE_USER_DATE,",
+						"          Eff_Start_Date,",
+						"          DIM_CREATE_DATE,",
+						"          Flag = FLAG",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select3",
+						"derivedColumn5 alterRow(updateIf(1==1)) ~> alterRow1",
+						"filter4 derive(Eff_Start_Date = currentDate(),",
+						"          DIM_CREATE_DATE = currentDate(),",
+						"          FLAG = 1) ~> derivedColumn6",
+						"lookup1 filter(isNull(Surr_Product_kEY) || SRC_MD5 != TGT_MD5) ~> filter4",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Surr_Product_kEY as integer,",
+						"          Product_ID as integer,",
+						"          Product_Name as string,",
+						"          Product_Price as decimal(5,2),",
+						"          Is_Active as string,",
+						"          PRODUCT_CATEGORY_ID as string,",
+						"          Product_Category_Name as string,",
+						"          Product_SubCategory_ID as integer,",
+						"          Product_SubCategory_Name as string,",
+						"          Product_Size as string,",
+						"          Product_Description as string,",
+						"          Eff_Start_Date as date,",
+						"          Eff_End_Date as date,",
+						"          DIM_CREATE_DATE as date,",
+						"          FLAG as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          Surr_Product_kEY,",
+						"          Eff_End_Date,",
+						"          FLAG",
+						"     )) ~> UPDATE",
+						"select3 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Surr_Product_kEY as integer,",
+						"          Product_ID as integer,",
+						"          Product_Name as string,",
+						"          Product_Price as decimal(5,2),",
+						"          Is_Active as string,",
+						"          PRODUCT_CATEGORY_ID as string,",
+						"          Product_Category_Name as string,",
+						"          Product_SubCategory_ID as integer,",
+						"          Product_SubCategory_Name as string,",
+						"          Product_Size as string,",
+						"          Product_Description as string,",
+						"          Eff_Start_Date as date,",
+						"          Eff_End_Date as date,",
+						"          DIM_CREATE_DATE as date,",
+						"          FLAG as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          Product_ID = PRODUCT_ID,",
+						"          Product_Name = PRODUCT_NAME,",
+						"          Product_Price = PRODUCT_PRICE,",
+						"          Is_Active = IS_ACTIVE,",
+						"          PRODUCT_CATEGORY_ID,",
+						"          Product_Category_Name = PRODUCT_CATEGORY_NAME,",
+						"          Product_SubCategory_ID = PRODUCT_SUBCATEGORY_ID,",
+						"          Product_SubCategory_Name = PRODUCT_SUBCATEGORY_NAME,",
+						"          Product_Size = PRODUCT_SIZE,",
+						"          Product_Description = PRODUCT_DESCRIPTION,",
+						"          Eff_Start_Date,",
+						"          DIM_CREATE_DATE,",
+						"          FLAG = Flag",
+						"     )) ~> INSERT"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PRODUCT_TOPPINGS_DIM_SCD2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "PROJECT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "azure_prod_topp",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "Azure_PROD_TOPPINGS_DIM",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Azure_PROD_TOPPINGS_DIM",
+								"type": "DatasetReference"
+							},
+							"name": "INSERT"
+						},
+						{
+							"dataset": {
+								"referenceName": "Azure_PROD_TOPPINGS_DIM",
+								"type": "DatasetReference"
+							},
+							"name": "UPDATE"
+						}
+					],
+					"transformations": [
+						{
+							"name": "lookup1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "derivedColumn3"
+						},
+						{
+							"name": "derivedColumn4"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "filter2"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "filter3"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PRODUCT_TOPPING_ID as integer,",
+						"          TOPPING_NAME as string,",
+						"          TOPING_PRICE as decimal(10,2),",
+						"          IS_ACTIVE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source(output(",
+						"          Product_Dim_Key as integer,",
+						"          Product_Topping_ID as integer,",
+						"          Topping_Name as string,",
+						"          Topping_Price as decimal(5,2),",
+						"          Is_Active as string,",
+						"          Flag as string,",
+						"          Effective_Date as date,",
+						"          End_Date as date,",
+						"          Stg_Create_Date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source2",
+						"derivedColumn3, derivedColumn1 lookup(source1@PRODUCT_TOPPING_ID == source2@Product_Topping_ID,",
+						"     multiple: true,",
+						"     broadcast: 'auto',",
+						"     pickup: 'any')~> lookup1",
+						"filter3 derive(TGT_MD5 = md5(Topping_Name,toString(Topping_Price),Is_Active)) ~> derivedColumn1",
+						"lookup1 derive(STG_CREATE_DATE = currentDate(),",
+						"          START_DATE = currentDate(),",
+						"          ACTIVE_FLAG = 'Y') ~> derivedColumn2",
+						"source1 derive(SRC_MD5 = md5(TOPPING_NAME,toString(TOPING_PRICE),IS_ACTIVE)) ~> derivedColumn3",
+						"lookup1 derive(End_Date = currentDate(),",
+						"          DEACTIVE_FLAG = 'N') ~> derivedColumn4",
+						"derivedColumn4 filter(!isNull(source2@Product_Topping_ID) && SRC_MD5 != TGT_MD5) ~> filter1",
+						"derivedColumn2 filter(isNull(source2@Product_Topping_ID) || SRC_MD5 != TGT_MD5) ~> filter2",
+						"filter1 alterRow(updateIf(1==1)) ~> alterRow1",
+						"source2 filter(isNull(End_Date) == true() && Flag == 'Y') ~> filter3",
+						"filter2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Product_Dim_Key as integer,",
+						"          Product_Topping_ID as integer,",
+						"          Topping_Name as string,",
+						"          Topping_Price as decimal(5,2),",
+						"          Is_Active as string,",
+						"          Flag as string,",
+						"          Effective_Date as date,",
+						"          End_Date as date,",
+						"          Stg_Create_Date as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          Product_Topping_ID = source1@PRODUCT_TOPPING_ID,",
+						"          Topping_Name = source1@TOPPING_NAME,",
+						"          Topping_Price = TOPING_PRICE,",
+						"          Is_Active = source1@IS_ACTIVE,",
+						"          Flag = ACTIVE_FLAG,",
+						"          Effective_Date = START_DATE,",
+						"          End_Date,",
+						"          Stg_Create_Date = derivedColumn2@STG_CREATE_DATE",
+						"     )) ~> INSERT",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Product_Dim_Key as integer,",
+						"          Product_Topping_ID as integer,",
+						"          Topping_Name as string,",
+						"          Topping_Price as decimal(5,2),",
+						"          Is_Active as string,",
+						"          Flag as string,",
+						"          Effective_Date as date,",
+						"          End_Date as date,",
+						"          Stg_Create_Date as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['Product_Dim_Key'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          Product_Dim_Key,",
+						"          End_Date,",
+						"          Flag = DEACTIVE_FLAG",
+						"     )) ~> UPDATE"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PROMOTION_SCD3_QUERYDB')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ASSIGNMENT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMO_QUERY",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMO_DIM_JOIN",
+								"type": "DatasetReference"
+							},
+							"name": "INSERTSINK"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMO_DIM_JOIN",
+								"type": "DatasetReference"
+							},
+							"name": "UPDATESINK"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "filter2"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          SRC_PROMOTION_ID as integer,",
+						"          SRC_PROMOTION_NAME as string,",
+						"          SRC_PROMOTION_TYPE as string,",
+						"          SRC_DISCOUNT_AMOUNT as string,",
+						"          SRC_START_DATE as date,",
+						"          SRC_END_DATE as date,",
+						"          TGT_PROMOTION_ID as integer,",
+						"          TGT_PROMOTION_NAME as string,",
+						"          TGT_PREV_PROMOTION_NAME as string,",
+						"          TGT_PROMOTION_TYPE as string,",
+						"          TGT_PREV_PROMOTION_TYPE as string,",
+						"          TGT_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          TGT_PREV_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          TGT_START_DATE as date,",
+						"          TGT_PREV_START_DATE as date,",
+						"          TGT_END_DATE as date,",
+						"          TGT_PREV_END_DATE as date,",
+						"          STG_CREATE_DATE as date,",
+						"          FLAG_UPDATE as string,",
+						"          FLAG_INSERT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'SELECT PS.[PROMOTION_ID] AS SRC_PROMOTION_ID,\\nPS.[PROMOTION_NAME] AS  SRC_PROMOTION_NAME, \\nPS.[PROMOTION_TYPE] AS SRC_PROMOTION_TYPE,\\nPS.[DISCOUNT_AMOUNT] AS SRC_DISCOUNT_AMOUNT,\\nPS.[START_DATE] AS SRC_START_DATE,\\nPS.[END_DATE] AS SRC_END_DATE,\\nPD.[PROMOTION_ID] AS TGT_PROMOTION_ID,\\nPD.[PROMOTION_NAME] AS TGT_PROMOTION_NAME,\\nCASE WHEN PS.[PROMOTION_NAME] <> PD.[PROMOTION_NAME] THEN PD.PROMOTION_NAME ELSE NULL END AS TGT_PREV_PROMOTION_NAME,\\nPD.[PROMOTION_TYPE] AS TGT_PROMOTION_TYPE,\\nCASE WHEN PS.[PROMOTION_TYPE] <> PD.[PROMOTION_TYPE] THEN PD.[PROMOTION_TYPE] ELSE NULL END AS TGT_PREV_PROMOTION_TYPE,\\nPD.[DISCOUNT_AMOUNT] AS TGT_DISCOUNT_AMOUNT,\\nCASE WHEN PS.[DISCOUNT_AMOUNT] <> PD.[DISCOUNT_AMOUNT] THEN PD.[DISCOUNT_AMOUNT] ELSE NULL END AS TGT_PREV_DISCOUNT_AMOUNT,\\nPD.[START_DATE] AS TGT_START_DATE,\\nCASE WHEN PS.[START_DATE] <> PD.[START_DATE] THEN PD.[START_DATE] ELSE NULL END AS TGT_PREV_START_DATE,\\nPD.[END_DATE] AS TGT_END_DATE,\\nCASE WHEN PS.[END_DATE] <> PD.[END_DATE] THEN PD.[END_DATE] ELSE NULL END AS TGT_PREV_END_DATE,\\nPD.[STG_CREATE_DATE] AS STG_CREATE_DATE,\\nCASE WHEN PD.PROMOTION_ID IS NOT NULL AND PS.[PROMOTION_NAME] <> PD.[PROMOTION_NAME] OR\\nPS.[PROMOTION_TYPE] <> PD.[PROMOTION_TYPE] OR\\nPS.[DISCOUNT_AMOUNT] <> PD.[DISCOUNT_AMOUNT] OR\\nPS.[START_DATE] <> PD.[START_DATE] OR\\nPS.[END_DATE] <> PD.[END_DATE] THEN \\'UPDATE\\' \\nELSE \\'NOVALUE\\' \\nEND AS FLAG_UPDATE,\\nCASE WHEN PD.PROMOTION_ID IS NULL THEN \\'INSERT\\' \\nELSE \\'NOVALUE\\' \\nEND AS FLAG_INSERT\\nFROM [hr].[PROMOTION_STG] AS PS\\nLEFT JOIN [hr].[PROMOTION_DIM] AS PD\\nON PS.[PROMOTION_ID] = PD.[PROMOTION_ID]',",
+						"     format: 'query') ~> source1",
+						"select1 filter(FLAG_INSERT == 'INSERT') ~> filter1",
+						"select1 filter(FLAG_UPDATE == 'UPDATE') ~> filter2",
+						"source1 select(mapColumn(",
+						"          SRC_PROMOTION_ID,",
+						"          SRC_PROMOTION_NAME,",
+						"          SRC_PROMOTION_TYPE,",
+						"          SRC_DISCOUNT_AMOUNT,",
+						"          SRC_START_DATE,",
+						"          SRC_END_DATE,",
+						"          TGT_PROMOTION_ID,",
+						"          TGT_PROMOTION_NAME,",
+						"          TGT_PREV_PROMOTION_NAME,",
+						"          TGT_PROMOTION_TYPE,",
+						"          TGT_PREV_PROMOTION_TYPE,",
+						"          TGT_DISCOUNT_AMOUNT,",
+						"          TGT_PREV_DISCOUNT_AMOUNT,",
+						"          TGT_START_DATE,",
+						"          TGT_PREV_START_DATE,",
+						"          TGT_END_DATE,",
+						"          TGT_PREV_END_DATE,",
+						"          STG_CREATE_DATE,",
+						"          FLAG_UPDATE,",
+						"          FLAG_INSERT",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"filter2 alterRow(updateIf(1==1)) ~> alterRow1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          SRC_PROMOTION_ID,",
+						"          SRC_PROMOTION_NAME,",
+						"          SRC_PROMOTION_TYPE,",
+						"          SRC_DISCOUNT_AMOUNT,",
+						"          SRC_START_DATE,",
+						"          SRC_END_DATE,",
+						"          TGT_PROMOTION_ID,",
+						"          TGT_PROMOTION_NAME,",
+						"          TGT_PROMOTION_TYPE,",
+						"          TGT_DISCOUNT_AMOUNT,",
+						"          TGT_START_DATE,",
+						"          TGT_END_DATE,",
+						"          STG_CREATE_DATE,",
+						"          FLAG_UPDATE,",
+						"          FLAG_INSERT",
+						"     )) ~> INSERTSINK",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['TGT_PROMOTION_ID'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          SRC_PROMOTION_ID,",
+						"          SRC_PROMOTION_NAME,",
+						"          SRC_PROMOTION_TYPE,",
+						"          SRC_DISCOUNT_AMOUNT,",
+						"          SRC_START_DATE,",
+						"          SRC_END_DATE,",
+						"          TGT_PROMOTION_ID,",
+						"          TGT_PROMOTION_NAME = SRC_PROMOTION_NAME,",
+						"          TGT_PREV_PROMOTION_NAME,",
+						"          TGT_PROMOTION_TYPE = SRC_PROMOTION_TYPE,",
+						"          TGT_PREV_PROMOTION_TYPE,",
+						"          TGT_DISCOUNT_AMOUNT = SRC_DISCOUNT_AMOUNT,",
+						"          TGT_PREV_DISCOUNT_AMOUNT,",
+						"          TGT_START_DATE = SRC_START_DATE,",
+						"          TGT_PREV_START_DATE,",
+						"          TGT_END_DATE,",
+						"          TGT_PREV_END_DATE,",
+						"          STG_CREATE_DATE,",
+						"          FLAG_UPDATE,",
+						"          FLAG_INSERT",
+						"     )) ~> UPDATESINK"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_PROMOTION_SCD3_QUERYDB_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ASSIGNMENT_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMO_QUERY",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMO_DIM_JOIN",
+								"type": "DatasetReference"
+							},
+							"name": "INSERTSINK"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable_PROMO_DIM_JOIN",
+								"type": "DatasetReference"
+							},
+							"name": "UPDATESINK"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "filter2"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "cast1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          SRC_PROMOTION_ID as integer,",
+						"          SRC_PROMOTION_NAME as string,",
+						"          SRC_PROMOTION_TYPE as string,",
+						"          SRC_DISCOUNT_AMOUNT as string,",
+						"          SRC_START_DATE as date,",
+						"          SRC_END_DATE as date,",
+						"          TGT_PROMOTION_ID as integer,",
+						"          TGT_PROMOTION_NAME as string,",
+						"          TGT_PROMOTION_TYPE as string,",
+						"          TGT_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          TGT_START_DATE as date,",
+						"          TGT_END_DATE as date,",
+						"          FLAG_UPDATE as string,",
+						"          FLAG_INSERT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'SELECT PS.[PROMOTION_ID] AS SRC_PROMOTION_ID,PS.[PROMOTION_NAME] AS  SRC_PROMOTION_NAME, PS.[PROMOTION_TYPE] AS SRC_PROMOTION_TYPE,PS.[DISCOUNT_AMOUNT] AS SRC_DISCOUNT_AMOUNT,\\nPS.[START_DATE] AS SRC_START_DATE,PS.[END_DATE] AS SRC_END_DATE,PD.[PROMOTION_ID] AS TGT_PROMOTION_ID,PD.[PROMOTION_NAME] AS TGT_PROMOTION_NAME,PD.[PROMOTION_TYPE] AS TGT_PROMOTION_TYPE,\\nPD.[DISCOUNT_AMOUNT] AS TGT_DISCOUNT_AMOUNT,PD.[START_DATE] AS TGT_START_DATE,PD.[END_DATE] AS TGT_END_DATE,\\nCASE WHEN PD.PROMOTION_ID IS NOT NULL AND PS.[DISCOUNT_AMOUNT] <> PD.[DISCOUNT_AMOUNT] THEN \\'UPDATE\\' ELSE \\'NOVALUE\\' END AS FLAG_UPDATE,\\nCASE WHEN PD.PROMOTION_ID IS NULL THEN \\'INSERT\\' ELSE \\'NOVALUE\\' END AS FLAG_INSERT\\nFROM [hr].[PROMOTION_STG] AS PS\\nLEFT JOIN [hr].[PROMOTION_DIM] AS PD\\nON PS.[PROMOTION_ID] = PD.[PROMOTION_ID]',",
+						"     format: 'query') ~> source1",
+						"select1 filter(FLAG_INSERT == 'INSERT') ~> filter1",
+						"select1 filter(FLAG_UPDATE == 'UPDATE') ~> filter2",
+						"cast1 select(mapColumn(",
+						"          SRC_PROMOTION_ID,",
+						"          SRC_PROMOTION_NAME,",
+						"          SRC_PROMOTION_TYPE,",
+						"          SRC_DISCOUNT_AMOUNT,",
+						"          SRC_START_DATE,",
+						"          SRC_END_DATE,",
+						"          TGT_PROMOTION_ID,",
+						"          TGT_PROMOTION_NAME,",
+						"          TGT_PROMOTION_TYPE,",
+						"          TGT_DISCOUNT_AMOUNT,",
+						"          TGT_START_DATE,",
+						"          TGT_END_DATE,",
+						"          FLAG_UPDATE,",
+						"          FLAG_INSERT",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"filter2 alterRow(updateIf(1==1)) ~> alterRow1",
+						"source1 cast(output(",
+						"          SRC_PROMOTION_ID as integer,",
+						"          SRC_PROMOTION_NAME as string,",
+						"          SRC_PROMOTION_TYPE as string,",
+						"          SRC_DISCOUNT_AMOUNT as string,",
+						"          SRC_START_DATE as date,",
+						"          SRC_END_DATE as date,",
+						"          TGT_PROMOTION_ID as integer,",
+						"          TGT_PROMOTION_NAME as string,",
+						"          TGT_PROMOTION_TYPE as string,",
+						"          TGT_DISCOUNT_AMOUNT as decimal(5,2),",
+						"          TGT_START_DATE as date,",
+						"          TGT_END_DATE as date,",
+						"          FLAG_UPDATE as string,",
+						"          FLAG_INSERT as string",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          SRC_PROMOTION_ID,",
+						"          SRC_PROMOTION_NAME,",
+						"          SRC_PROMOTION_TYPE,",
+						"          SRC_DISCOUNT_AMOUNT,",
+						"          SRC_START_DATE,",
+						"          SRC_END_DATE",
+						"     )) ~> INSERTSINK",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['TGT_PROMOTION_ID'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          SRC_PROMOTION_ID,",
+						"          SRC_PROMOTION_NAME,",
+						"          SRC_PROMOTION_TYPE,",
+						"          SRC_DISCOUNT_AMOUNT,",
+						"          SRC_START_DATE,",
+						"          SRC_END_DATE,",
+						"          TGT_PROMOTION_ID,",
+						"          TGT_PROMOTION_NAME,",
+						"          TGT_PROMOTION_TYPE,",
+						"          TGT_DISCOUNT_AMOUNT,",
+						"          TGT_START_DATE,",
+						"          TGT_END_DATE,",
+						"          FLAG_UPDATE,",
+						"          FLAG_INSERT",
+						"     )) ~> UPDATESINK"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ARCHIEVE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FILENAME": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FILENAME",
+							"type": "Expression"
+						},
+						"folderPath": "INPUT",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TESTINGFILE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TESTFILE": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "TESTING",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DELETEFILE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "BlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"DELETEFILE": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "INPUT",
+						"fileSystem": "data"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PIP_COUNTRY_NEW')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "OracleSource",
+								"oracleReaderQuery": {
+									"value": "@concat('select * from hr.countries where country_id=''',concat(activity('Lookup1').output.firstRow.country_id),'''')",
+									"type": "Expression"
+								},
+								"partitionOption": "None",
+								"convertDecimalToInteger": false,
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DC_COUNTRY",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "src_not_parameterized",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "VAR_CID_ASSIGN",
+							"value": "'AR'"
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "OracleSource",
+								"oracleReaderQuery": "SELECT * FROM LOCATIONS WHERE COUNTRY_ID='CA'",
+								"partitionOption": "None",
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "DC_COUNTRY",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"COUNTRY_ID": {
+						"type": "string",
+						"defaultValue": "'CA'"
+					}
+				},
+				"variables": {
+					"VAR_CID": {
+						"type": "String",
+						"defaultValue": "1"
+					},
+					"VAR_CID_ASSIGN": {
+						"type": "String",
+						"defaultValue": "'CA'"
+					}
+				},
+				"folder": {
+					"name": "ORACLE_HR"
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-10-26T02:59:12Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PIP_DATA_DB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "OracleSource",
+								"partitionOption": "None",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "OracleTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TGT_COUNTRY_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TGT_TABLE": {
+										"value": "@pipeline().parameters.TPARAM_COUNTRY",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"TPARAM_COUNTRY": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-10-22T03:54:04Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PIP_DELETE_CT_SOURCE')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -221,6 +1312,229 @@
 				"lastPublishTime": "2024-10-26T02:59:11Z"
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pip_ARCHIVE_FILE_AFTER_COPY')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ARCHIEVE",
+								"type": "DatasetReference",
+								"parameters": {
+									"FILENAME": {
+										"value": "@variables('FILENAME')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ARCHIEVE_DATA",
+								"type": "DatasetReference",
+								"parameters": {
+									"TABLENAME": {
+										"value": "@variables('TABLENAME')",
+										"type": "Expression"
+									},
+									"SCHEMA_NAME": {
+										"value": "@variables('SCHEMA_NAME')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ARCHIEVE",
+								"type": "DatasetReference",
+								"parameters": {
+									"FILENAME": {
+										"value": "@variables('FILENAME')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TESTINGFILE",
+								"type": "DatasetReference",
+								"parameters": {
+									"TESTFILE": {
+										"value": "@variables('FILENAME')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Delete1",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Copy data2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DELETEFILE",
+								"type": "DatasetReference",
+								"parameters": {
+									"DELETEFILE": {
+										"value": "@variables('FILENAME')",
+										"type": "Expression"
+									}
+								}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"FILENAME": {
+						"type": "String",
+						"defaultValue": "NAME_CONCAT.txt"
+					},
+					"SCHEMA_NAME": {
+						"type": "String",
+						"defaultValue": "HR"
+					},
+					"TABLENAME": {
+						"type": "String",
+						"defaultValue": "DNORM1"
+					},
+					"TETSFILE": {
+						"type": "String"
+					},
+					"DELETEFILE": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "LEARN"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ARCHIEVE')]",
+				"[concat(variables('factoryId'), '/datasets/TESTINGFILE')]",
+				"[concat(variables('factoryId'), '/datasets/DELETEFILE')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pip_CHECK_FILEEXITS_COPY')]",
@@ -1203,1351 +2517,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-10-26T02:59:11Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_EMAIL_FAILURE_MESSAGE')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Delimited_EMP_SRC",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "FILEEXISTS_TGT",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "LEARN"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_EXEC_P1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DelimitedTextsrc",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "src_not_parameterized",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-26T02:59:11Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_FILENAME_CREATION')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"additionalColumns": [
-									{
-										"name": "FILENAME",
-										"value": "$$FILENAME"
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "EMPLOYEE_ID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "EMPLOYEE_ID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FIRST_NAME",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "FIRST_NAME",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LAST_NAME",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "LAST_NAME",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EMAIL",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "EMAIL",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PHONE_NUMBER",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "PHONE_NUMBER",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "HIRE_DATE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "HIRE_DATE",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "JOB_ID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "JOB_ID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SALARY",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SALARY",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "COMMISSION_PCT",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "COMMISSION_PCT",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MANAGER_ID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "MANAGER_ID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DEPARTMENT_ID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DEPARTMENT_ID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SK",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SK",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FILENAME",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FILENAME",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "src_not_parameterized",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "tgt_not_parameterized",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-26T02:59:12Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_FILE_NAME_PRAC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"additionalColumns": [
-									{
-										"name": "File_Name",
-										"value": "$$FILENAME"
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "sourcedataset",
-								"type": "DatasetReference",
-								"parameters": {
-									"SRCPARAMDATA": {
-										"value": "@pipeline().parameters.SRC_FILE_NAME",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "sinkdataset",
-								"type": "DatasetReference",
-								"parameters": {
-									"PARAMDATASET": {
-										"value": "@pipeline().parameters.TGT_FILE_NAME",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"SRC_FILE_NAME": {
-						"type": "string"
-					},
-					"TGT_FILE_NAME": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-26T03:59:34Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_FOREACH_LKP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"dataset": {
-								"referenceName": "lkp_configfile_data",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup1').output.value",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "lkp_src_data",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DelimitedText2",
-											"type": "DatasetReference",
-											"parameters": {
-												"foldername": {
-													"value": "@item().dept_name",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-19T02:24:35Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_FOREACH_PRAC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "FOREACH_DATA",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Metadata1').output.childItems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "If Condition1",
-									"type": "IfCondition",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@startswith(item().name,'DEPT')",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "Copy data1",
-												"type": "Copy",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "0.12:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "DelimitedTextSource",
-														"storeSettings": {
-															"type": "AzureBlobFSReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false
-														},
-														"formatSettings": {
-															"type": "DelimitedTextReadSettings"
-														}
-													},
-													"sink": {
-														"type": "DelimitedTextSink",
-														"storeSettings": {
-															"type": "AzureBlobFSWriteSettings"
-														},
-														"formatSettings": {
-															"type": "DelimitedTextWriteSettings",
-															"quoteAllText": true,
-															"fileExtension": ".txt"
-														}
-													},
-													"enableStaging": false,
-													"translator": {
-														"type": "TabularTranslator",
-														"typeConversion": true,
-														"typeConversionSettings": {
-															"allowDataTruncation": true,
-															"treatBooleanAsNumber": false
-														}
-													}
-												},
-												"inputs": [
-													{
-														"referenceName": "FORCOPY",
-														"type": "DatasetReference",
-														"parameters": {
-															"SRC_FILE": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "FORCOPYTGT",
-														"type": "DatasetReference",
-														"parameters": {
-															"TGT_FILE": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												]
-											}
-										]
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-12-09T05:31:03Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_IF_ACT_PRAC_PARAM')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "If Condition1",
-						"type": "IfCondition",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(pipeline().parameters.RUNLOAD, 1)",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "MESSAGE",
-										"value": "'CHECKED MESSAGE'"
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "BLOB_IF_PARAM",
-											"type": "DatasetReference",
-											"parameters": {
-												"FILE_NAME_SRC": {
-													"value": "@pipeline().parameters.FILE_NAME_SRC",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "BLOB_IF_PARAM_ACTIVITY",
-											"type": "DatasetReference",
-											"parameters": {
-												"FOLDER_NAME": {
-													"value": "@pipeline().parameters.FOLDER_NAME_TGT",
-													"type": "Expression"
-												},
-												"FILE_NAME": {
-													"value": "@pipeline().parameters.FILE_NAME_TGT",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"RUNLOAD": {
-						"type": "int",
-						"defaultValue": 1
-					},
-					"FILE_NAME_SRC": {
-						"type": "string"
-					},
-					"FOLDER_NAME_TGT": {
-						"type": "string"
-					},
-					"FILE_NAME_TGT": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"MESSAGE": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "PARAMPATH"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-25T03:31:19Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_IF_ACT_PRAC_PARAM_METADATA')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "If Condition1",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@greater(activity('Get Metadata1').output.size, 10)",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "MESSAGE",
-										"value": "'CHECKED MESSAGE'"
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "BLOB_IF_PARAM",
-											"type": "DatasetReference",
-											"parameters": {
-												"FILE_NAME_SRC": {
-													"value": "@pipeline().parameters.FILE_NAME_SRC",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "TGTDATA",
-											"type": "DatasetReference",
-											"parameters": {
-												"TGTPARAM": {
-													"value": "@pipeline().parameters.TGTPARAM_FILE",
-													"type": "Expression"
-												},
-												"TGTPATH": {
-													"value": "@pipeline().parameters.TGTPARAM_FOLDER",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "BLOB_IF_PARAM_ACTIVITY",
-								"type": "DatasetReference",
-								"parameters": {
-									"FOLDER_NAME": {
-										"value": "@pipeline().parameters.FOLDER_NAME_TGT",
-										"type": "Expression"
-									},
-									"FILE_NAME": {
-										"value": "@pipeline().parameters.FILE_NAME_TGT",
-										"type": "Expression"
-									}
-								}
-							},
-							"fieldList": [
-								"size"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"RUNLOAD": {
-						"type": "int",
-						"defaultValue": 1
-					},
-					"FILE_NAME_SRC": {
-						"type": "string"
-					},
-					"FOLDER_NAME_TGT": {
-						"type": "string"
-					},
-					"FILE_NAME_TGT": {
-						"type": "string"
-					},
-					"TGTPARAM_FOLDER": {
-						"type": "string"
-					},
-					"TGTPARAM_FILE": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"MESSAGE": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "PARAMPATH"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-25T03:58:24Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_JOIN_TWOTABLES_ORACLE')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT E.SRC_EMPLOYEE_ID,E.SRC_FIRST_NAME,E.SRC_LAST_NAME,E.SRC_DEPARTMENT_ID,D.DEPARTMENT_NAME,D.MANAGER_ID,D.LOCATION_ID  FROM HR.TGT_EMP_DEPT_DT E\nINNER JOIN HR.DEPARTMENTS D\nON E.SRC_DEPARTMENT_ID = D.DEPARTMENT_ID",
-								"partitionOption": "None",
-								"convertDecimalToInteger": false,
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "OracleSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Oracle_JOIN_EMP_DEPT",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Oracle_TGT_JOINTWO_TABLES",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGTTABLE": {
-										"value": "@pipeline().parameters.TGT_EMP_DEPT_JOIN",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"TGT_EMP_DEPT_JOIN": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ASSIGNMENTS"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-11-19T03:55:15Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_LKP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM EMPLOYEES WHERE DEPARTMENT_ID = 50",
-								"partitionOption": "None",
-								"convertDecimalToInteger": false,
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "LKP_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"LKP_TABLE_NAME": {
-										"value": "@pipeline().parameters.DEPARTMENT_ID",
-										"type": "Expression"
-									},
-									"LKP_SCHEMA_NAME": "HR"
-								}
-							}
-						}
-					},
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "OracleSource",
-								"oracleReaderQuery": "SELECT * FROM EMPLOYEES ",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Oracle_QUERY",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DB_LKP_EMP",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "VARDEPARTMENT",
-							"value": {
-								"value": "@pipeline().parameters.DEPARTMENT_ID",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"DEPARTMENT_ID": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"VARDEPARTMENT": {
-						"type": "String",
-						"defaultValue": "20"
-					},
-					"VAR_DEPT_ID": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "ORACLE_HR"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-10-23T03:35:43Z"
 			},
 			"dependsOn": []
 		}
