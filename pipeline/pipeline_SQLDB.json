@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_FIXEDWIDTH_FILE",
+						"referenceName": "dataflow_JSONFILE_LOAD",
 						"type": "DataFlowReference"
 					},
 					"compute": {
