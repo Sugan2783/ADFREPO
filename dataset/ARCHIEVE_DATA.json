@@ -14,8 +14,8 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "HR",
-			"table": "DNORM"
+			"schema": "",
+			"table": ""
 		}
 	}
 }
