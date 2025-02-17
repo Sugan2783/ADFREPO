@@ -81,7 +81,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * FROM CDC_PRAC\nWHERE last_mod_date >= '@{activity('Ext_Last_Upd_Date').output.firstRow.last_mod_date}' and last_mod_date > '@{activity('Ext_Last_Load_Date').output.firstRow.lastloadDate}'",
+							"value": "select * from dbo.cdc_prac\nwhere last_mod_date >= '@{activity('Ext_Last_Upd_Date').output.firstRow.last_mod_date}' and last_mod_date > '@{activity('Ext_Last_Load_Date').output.firstRow.lastloadDate}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
