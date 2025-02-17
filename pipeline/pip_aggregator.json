@@ -16,8 +16,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_HARD_DELETE",
+						"referenceName": "dataflow_JSON_FLAT",
 						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "BlobLinkedService",
+							"type": "LinkedServiceReference"
+						}
 					},
 					"compute": {
 						"coreCount": 8,
