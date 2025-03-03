@@ -51,7 +51,7 @@
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Set variable1",
+									"activity": "Set variable2",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -138,6 +138,30 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "QUERY",
+								"value": {
+									"value": "to_string(SELECT * FROM @(variables('SOURCE_QUERY')}",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -145,6 +169,9 @@
 		],
 		"variables": {
 			"SOURCE_QUERY": {
+				"type": "Array"
+			},
+			"QUERY": {
 				"type": "String"
 			}
 		},
