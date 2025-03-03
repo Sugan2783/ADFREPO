@@ -68,11 +68,34 @@
 							"typeProperties": {
 								"source": {
 									"type": "OracleSource",
-									"oracleReaderQuery": "SELECT * FROM ",
+									"oracleReaderQuery": {
+										"value": "SELECT * FROM @{variables('SOURCE_QUERY')}",
+										"type": "Expression"
+									},
 									"partitionOption": "None",
+									"convertDecimalToInteger": false,
 									"queryTimeout": "02:00:00"
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
@@ -80,6 +103,18 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"SOURCE_NAME": {
+											"value": "@item().SOURCE_TABLE",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "PROJ_ADF_ETE",
+									"type": "DatasetReference",
+									"parameters": {
+										"TARGET_TABLE": {
 											"value": "@item().SOURCE_TABLE",
 											"type": "Expression"
 										}
