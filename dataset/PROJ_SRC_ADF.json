@@ -9,12 +9,19 @@
 			"SCHEMA_NAME": {
 				"type": "string"
 			},
-			"TABLE_NAME": {
+			"SOURCE_NAME": {
 				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "OracleTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": "HR",
+			"table": {
+				"value": "@dataset().SOURCE_NAME",
+				"type": "Expression"
+			}
+		}
 	}
 }

@@ -69,7 +69,10 @@
 							"inputs": [
 								{
 									"referenceName": "PROJ_SRC_ADF",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"SCHEMA_NAME": "HR"
+									}
 								}
 							]
 						}
