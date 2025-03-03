@@ -49,7 +49,14 @@
 						{
 							"name": "Copy data1",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -61,6 +68,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "OracleSource",
+									"oracleReaderQuery": "SELECT * FROM ",
 									"partitionOption": "None",
 									"queryTimeout": "02:00:00"
 								},
@@ -71,15 +79,40 @@
 									"referenceName": "PROJ_SRC_ADF",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA_NAME": "HR"
+										"SOURCE_NAME": {
+											"value": "@item().SOURCE_TABLE",
+											"type": "Expression"
+										}
 									}
 								}
 							]
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SOURCE_QUERY",
+								"value": {
+									"value": "@item().SOURCE_TABLE",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
 			}
 		],
+		"variables": {
+			"SOURCE_QUERY": {
+				"type": "Array"
+			}
+		},
 		"folder": {
 			"name": "PROJECT"
 		},
