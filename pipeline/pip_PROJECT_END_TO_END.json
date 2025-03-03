@@ -145,7 +145,7 @@
 		],
 		"variables": {
 			"SOURCE_QUERY": {
-				"type": "Array"
+				"type": "String"
 			}
 		},
 		"folder": {
