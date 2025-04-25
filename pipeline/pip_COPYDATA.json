@@ -84,12 +84,20 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ORACLE_OBJECT",
+						"referenceName": "oracle_claim",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
+		"parameters": {
+			"schema_name": {
+				"type": "string"
+			},
+			"table_name": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "ADF_TRAINING_NEW"
 		},
