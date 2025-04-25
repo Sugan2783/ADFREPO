@@ -22,7 +22,8 @@
 					},
 					"sink": {
 						"type": "OracleSink",
-						"writeBatchSize": 10000
+						"writeBatchSize": 10000,
+						"preCopyScript": "TRUNCATE TABLE HR.CLAIM_TGT"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -90,14 +91,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"schema_name": {
-				"type": "string"
-			},
-			"table_name": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "ADF_TRAINING_NEW"
 		},
