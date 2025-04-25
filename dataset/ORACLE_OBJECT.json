@@ -5,14 +5,6 @@
 			"referenceName": "Oracle1",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"schema_name": {
-				"type": "string"
-			},
-			"table_name": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "OracleTable",
 		"schema": [],
