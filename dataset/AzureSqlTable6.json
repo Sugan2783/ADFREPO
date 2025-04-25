@@ -8,19 +8,13 @@
 		"parameters": {
 			"TABLE_SRC": {
 				"type": "string"
-			},
-			"SCHEMA_NAME": {
-				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": {
-				"value": "@dataset().SCHEMA_NAME",
-				"type": "Expression"
-			},
+			"schema": "SalesLT",
 			"table": {
 				"value": "@dataset().TABLE_SRC",
 				"type": "Expression"
