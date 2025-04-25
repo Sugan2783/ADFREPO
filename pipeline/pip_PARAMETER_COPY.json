@@ -16,9 +16,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "AzureSqlSink",
@@ -37,14 +43,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable6",
-						"type": "DatasetReference",
-						"parameters": {
-							"TABLE_SRC": {
-								"value": "@pipeline().parameters.SOURCE_NAME",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "FILE_PROD",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -55,8 +55,7 @@
 							"TABLE_SRC": {
 								"value": "@pipeline().parameters.SOURCE_NAME",
 								"type": "Expression"
-							},
-							"SCHEMA_NAME": "SalesLT"
+							}
 						}
 					}
 				]

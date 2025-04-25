@@ -14,7 +14,7 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "SalesLT",
+			"schema": "HR",
 			"table": {
 				"value": "@dataset().TABLE_SRC",
 				"type": "Expression"

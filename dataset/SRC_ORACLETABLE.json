@@ -10,11 +10,7 @@
 		},
 		"annotations": [],
 		"type": "OracleTable",
-		"schema": [],
-		"typeProperties": {
-			"schema": "HR",
-			"table": "COUNTRIES"
-		}
+		"schema": []
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
