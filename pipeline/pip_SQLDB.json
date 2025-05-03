@@ -21,29 +21,40 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "JsonSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "JsonWriteSettings"
-						}
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SCHEMA": "hr"
+							"SCHEMA": "hr",
+							"table_name": "product_dim"
 						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Json1",
-						"type": "DatasetReference"
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference",
+						"parameters": {
+							"SCHEMA": "dbo",
+							"table_name": "product_dim_new"
+						}
 					}
 				]
 			}
