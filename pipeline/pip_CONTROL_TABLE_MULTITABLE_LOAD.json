@@ -1,0 +1,130 @@
+{
+	"name": "pip_CONTROL_TABLE_MULTITABLE_LOAD",
+	"properties": {
+		"activities": [
+			{
+				"name": "FETCH METADATA CONTROL_TABLE",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM MD.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference",
+						"parameters": {
+							"SCHEMA": "MD",
+							"table_name": "CONTROL_TABLE"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Traverse_control_values",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "FETCH METADATA CONTROL_TABLE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('FETCH METADATA CONTROL_TABLE').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "source_to_target",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ADF_TRAIN_SQLDB",
+									"type": "DatasetReference",
+									"parameters": {
+										"SCHEMA": {
+											"value": "@item().source_schema",
+											"type": "Expression"
+										},
+										"table_name": {
+											"value": "@item().source_table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ADF_TRAIN_SQLDB",
+									"type": "DatasetReference",
+									"parameters": {
+										"SCHEMA": {
+											"value": "@item().target_schema",
+											"type": "Expression"
+										},
+										"table_name": {
+											"value": "@item().target_table",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "ADF_TRAINING_NEW"
+		},
+		"annotations": []
+	}
+}
