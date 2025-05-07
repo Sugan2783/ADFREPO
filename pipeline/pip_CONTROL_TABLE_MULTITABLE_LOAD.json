@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM MD.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y'",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM MD.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system}",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -35,6 +38,8 @@
 			{
 				"name": "Traverse_control_values",
 				"type": "ForEach",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "FETCH METADATA CONTROL_TABLE",
@@ -122,6 +127,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"p_source_system": {
+				"type": "string",
+				"defaultValue": "'SQL_SERVER'"
+			}
+		},
 		"folder": {
 			"name": "ADF_TRAINING_NEW"
 		},
