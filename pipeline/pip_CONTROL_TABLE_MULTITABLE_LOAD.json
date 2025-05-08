@@ -330,7 +330,7 @@
 											"type": "Expression"
 										},
 										"DIRECTORY": {
-											"value": "@pipeline().parameters.p_archive_directory",
+											"value": "@pipeline().parameters.p_directory",
 											"type": "Expression"
 										},
 										"FILENAME": {
