@@ -190,7 +190,7 @@
 									"referenceName": "ADF_TRAIN_SQLDB",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA": "md",
+										"SCHEMA": "dbo",
 										"table_name": {
 											"value": "@item().SOURCE_TABLE",
 											"type": "Expression"
