@@ -56,6 +56,8 @@
 						{
 							"name": "ADLS_to_target",
 							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "source to adls",
@@ -138,6 +140,8 @@
 						{
 							"name": "source to adls",
 							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -209,7 +213,7 @@
 							]
 						},
 						{
-							"name": "Copy data1",
+							"name": "ADLS_STAGE_to_ ARCHIEVE",
 							"type": "Copy",
 							"dependsOn": [
 								{
@@ -308,7 +312,7 @@
 							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Copy data1",
+									"activity": "ADLS_STAGE_to_ ARCHIEVE",
 									"dependencyConditions": [
 										"Succeeded"
 									]
