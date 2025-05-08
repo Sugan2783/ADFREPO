@@ -56,8 +56,6 @@
 						{
 							"name": "ADLS_to_target",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "source to adls",
@@ -140,8 +138,6 @@
 						{
 							"name": "source to adls",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -308,8 +304,6 @@
 						{
 							"name": "Delete_30days_file",
 							"type": "Delete",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "ADLS_STAGE_to_ ARCHIEVE",
@@ -344,6 +338,13 @@
 											"type": "Expression"
 										}
 									}
+								},
+								"logStorageSettings": {
+									"linkedServiceName": {
+										"referenceName": "BlobLinkedService",
+										"type": "LinkedServiceReference"
+									},
+									"path": "adftraining/LOG"
 								},
 								"enableLogging": true,
 								"storeSettings": {
