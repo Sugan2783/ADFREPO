@@ -74,11 +74,15 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "AzureSqlSink",
-									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false,
-									"tableOption": "autoCreate",
-									"disableMetricsCollection": false
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
 								},
 								"enableStaging": false,
 								"translator": {
@@ -108,15 +112,105 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ADF_TRAIN_SQLDB",
+									"referenceName": "ADLS_PARAM",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA": {
-											"value": "@item().target_schema",
+										"CONTAINER": {
+											"value": "@pipeline().parameters.p_container",
 											"type": "Expression"
 										},
-										"table_name": {
-											"value": "@item().target_table",
+										"DIRECTORY": {
+											"value": "@pipeline().parameters.p_directory",
+											"type": "Expression"
+										},
+										"FILENAME": {
+											"value": "@item().source_table",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "source to adls",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ADLS_PARAM",
+									"type": "DatasetReference",
+									"parameters": {
+										"CONTAINER": {
+											"value": "@pipeline().parameters.p_container",
+											"type": "Expression"
+										},
+										"DIRECTORY": {
+											"value": "@pipeline().parameters.p_directory",
+											"type": "Expression"
+										},
+										"FILENAME": {
+											"value": "@concat(item().source_table,'.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ADLS_PARAM",
+									"type": "DatasetReference",
+									"parameters": {
+										"CONTAINER": {
+											"value": "@pipeline().parameters.p_container",
+											"type": "Expression"
+										},
+										"DIRECTORY": {
+											"value": "@pipeline().parameters.p_directory",
+											"type": "Expression"
+										},
+										"FILENAME": {
+											"value": "@concat(item().source_table,'.csv')",
 											"type": "Expression"
 										}
 									}
@@ -131,6 +225,14 @@
 			"p_source_system": {
 				"type": "string",
 				"defaultValue": "'SQL_SERVER'"
+			},
+			"p_container": {
+				"type": "string",
+				"defaultValue": "'adftraining'"
+			},
+			"p_directory": {
+				"type": "string",
+				"defaultValue": "'STAGE'"
 			}
 		},
 		"folder": {
