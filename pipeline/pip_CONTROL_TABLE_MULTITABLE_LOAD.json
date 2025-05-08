@@ -211,8 +211,6 @@
 						{
 							"name": "Copy data1",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "ADLS_to_target",
@@ -265,12 +263,6 @@
 							"inputs": [
 								{
 									"referenceName": "ADLS_PARAM",
-									"type": "DatasetReference"
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "ADLS_PARAM",
 									"type": "DatasetReference",
 									"parameters": {
 										"CONTAINER": {
@@ -278,11 +270,31 @@
 											"type": "Expression"
 										},
 										"DIRECTORY": {
-											"value": "@pipeline().parameters.p_archive_directory",
+											"value": "@pipeline().parameters.p_directory",
 											"type": "Expression"
 										},
 										"FILENAME": {
-											"value": "@concat(item().SOURCE_TABLE,'-',utcNow(),'.csv')",
+											"value": "@concat(item().SOURCE_TABLE,'.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ADF_TRAIN_ARCHIEVE",
+									"type": "DatasetReference",
+									"parameters": {
+										"CONTAINER": {
+											"value": "@pipeline().parameters.p_container",
+											"type": "Expression"
+										},
+										"ARCHIEVE_DIRECTORY": {
+											"value": "@pipeline().parameters.p_archive_directory",
+											"type": "Expression"
+										},
+										"FILE_NAME": {
+											"value": "@concat(item().SOURCE_TABLE,'_',utcNow(),'.csv')",
 											"type": "Expression"
 										}
 									}
