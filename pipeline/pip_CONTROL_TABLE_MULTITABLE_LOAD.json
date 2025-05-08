@@ -280,7 +280,21 @@
 							"outputs": [
 								{
 									"referenceName": "ADLS_PARAM",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"CONTAINER": {
+											"value": "@pipeline().parameters.p_container",
+											"type": "Expression"
+										},
+										"DIRECTORY": {
+											"value": "@pipeline().parameters.p_archive_directory",
+											"type": "Expression"
+										},
+										"FILENAME": {
+											"value": "@concat(item().SOURCE_TABLE,'-',utcNow(),'.csv')",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
