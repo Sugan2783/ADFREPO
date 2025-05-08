@@ -71,13 +71,16 @@
 		],
 		"parameters": {
 			"p_container": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "adftraining"
 			},
 			"p_directory": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "onprem"
 			},
 			"p_file_name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "customer_claim.csv"
 			}
 		},
 		"folder": {
