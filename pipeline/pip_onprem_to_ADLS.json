@@ -49,8 +49,22 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ADLS_PARAM",
-						"type": "DatasetReference"
+						"referenceName": "ADF_TRAIN_ARCHIEVE",
+						"type": "DatasetReference",
+						"parameters": {
+							"CONTAINER": {
+								"value": "@pipeline().parameters.p_container",
+								"type": "Expression"
+							},
+							"ARCHIEVE_DIRECTORY": {
+								"value": "@pipeline().parameters.p_directory",
+								"type": "Expression"
+							},
+							"FILE_NAME": {
+								"value": "@pipeline().parameters.p_file_name",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
