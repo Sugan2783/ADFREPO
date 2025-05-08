@@ -145,15 +145,9 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "DelimitedTextSource",
-									"storeSettings": {
-										"type": "AzureBlobFSReadSettings",
-										"recursive": true,
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
 								},
 								"sink": {
 									"type": "DelimitedTextSink",
@@ -178,19 +172,12 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ADLS_PARAM",
+									"referenceName": "ADF_TRAIN_SQLDB",
 									"type": "DatasetReference",
 									"parameters": {
-										"CONTAINER": {
-											"value": "@pipeline().parameters.p_container",
-											"type": "Expression"
-										},
-										"DIRECTORY": {
-											"value": "@pipeline().parameters.p_directory",
-											"type": "Expression"
-										},
-										"FILENAME": {
-											"value": "@concat(item().source_table,'.csv')",
+										"SCHEMA": "md",
+										"table_name": {
+											"value": "@item().source_table",
 											"type": "Expression"
 										}
 									}
