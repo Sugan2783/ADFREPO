@@ -28,8 +28,8 @@
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SCHEMA": "MD",
-							"table_name": "CONTROL_TABLE"
+							"SOURCE_SCHEMA": "MD",
+							"SOURCE_TABLE": "CONTROL_TABLE"
 						}
 					},
 					"firstRowOnly": false
@@ -126,8 +126,8 @@
 									"referenceName": "ADF_TRAIN_SQLDB",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA": "dbo",
-										"table_name": {
+										"SOURCE_SCHEMA": "dbo",
+										"SOURCE_TABLE": {
 											"value": "@concat(item().SOURCE_TABLE,'_')",
 											"type": "Expression"
 										}
@@ -179,8 +179,8 @@
 									"referenceName": "ADF_TRAIN_SQLDB",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA": "dbo",
-										"table_name": {
+										"SOURCE_SCHEMA": "dbo",
+										"SOURCE_TABLE": {
 											"value": "@item().SOURCE_TABLE",
 											"type": "Expression"
 										}

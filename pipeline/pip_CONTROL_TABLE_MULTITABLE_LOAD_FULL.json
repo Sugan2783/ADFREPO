@@ -81,8 +81,11 @@
 									}
 								},
 								"sink": {
-									"type": "OracleSink",
-									"writeBatchSize": 10000
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
 								"translator": {
@@ -116,7 +119,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DB_PARAM_PRAC",
+									"referenceName": "SQLDB_PARAM",
 									"type": "DatasetReference"
 								}
 							]
