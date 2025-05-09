@@ -1,0 +1,20 @@
+{
+	"name": "SQLDB_PARAM",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SOURCE_SCHEMA": {
+				"type": "string"
+			},
+			"SOURCE_TABLE": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
