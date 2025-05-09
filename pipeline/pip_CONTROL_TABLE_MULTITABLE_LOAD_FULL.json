@@ -1,5 +1,5 @@
 {
-	"name": "pip_CONTROL_TABLE_MULTITABLE_LOAD_copy1",
+	"name": "pip_CONTROL_TABLE_MULTITABLE_LOAD_FULL",
 	"properties": {
 		"activities": [
 			{
@@ -18,7 +18,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * FROM MD.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system}",
+							"value": "SELECT * FROM MDF.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -28,8 +28,8 @@
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SCHEMA": "MD",
-							"table_name": "CONTROL_TABLE"
+							"SOURCE_SCHEMA": "MD",
+							"SOURCE_TABLE": "CONTROL_TABLE"
 						}
 					},
 					"firstRowOnly": false
@@ -126,9 +126,12 @@
 									"referenceName": "ADF_TRAIN_SQLDB",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA": "dbo",
-										"table_name": {
-											"value": "@concat(item().SOURCE_TABLE,'_')",
+										"SOURCE_SCHEMA": {
+											"value": "@{item().SOURCE_SCHEMA}",
+											"type": "Expression"
+										},
+										"SOURCE_TABLE": {
+											"value": "@concat(item().SOURCE_TABLE)",
 											"type": "Expression"
 										}
 									}
@@ -179,9 +182,12 @@
 									"referenceName": "ONPREM_SQLSERVER_param",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA": "dbo",
+										"SCHEMA": {
+											"value": "@{item().SOURCE_SCHEMA}",
+											"type": "Expression"
+										},
 										"SOURCE_TABLE": {
-											"value": "@item().SOURCE_TABLE",
+											"value": "@{item().SOURCE_TABLE}",
 											"type": "Expression"
 										}
 									}
@@ -380,6 +386,10 @@
 			"p_archive_directory": {
 				"type": "string",
 				"defaultValue": "archive"
+			},
+			"p_load_type": {
+				"type": "string",
+				"defaultValue": "'FULL'"
 			}
 		},
 		"folder": {
