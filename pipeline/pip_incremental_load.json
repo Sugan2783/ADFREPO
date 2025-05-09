@@ -380,7 +380,7 @@
 			},
 			"p_load_type": {
 				"type": "string",
-				"defaultValue": "'FULL'"
+				"defaultValue": "'INCRE'"
 			}
 		},
 		"folder": {
