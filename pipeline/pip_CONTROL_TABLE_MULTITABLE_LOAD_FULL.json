@@ -118,17 +118,7 @@
 							"outputs": [
 								{
 									"referenceName": "ADF_TRAIN_SQLDB",
-									"type": "DatasetReference",
-									"parameters": {
-										"CONTAINER": {
-											"value": "@pipeline().parameters.p_container",
-											"type": "Expression"
-										},
-										"DIRECTORY": {
-											"value": "@pipeline().parameters.p_directory",
-											"type": "Expression"
-										}
-									}
+									"type": "DatasetReference"
 								}
 							]
 						},
