@@ -81,9 +81,8 @@
 									}
 								},
 								"sink": {
-									"type": "AzureSqlSink",
-									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false
+									"type": "OracleSink",
+									"writeBatchSize": 10000
 								},
 								"enableStaging": false,
 								"translator": {
@@ -117,7 +116,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ADF_TRAIN_SQLDB",
+									"referenceName": "DB_PARAM_PRAC",
 									"type": "DatasetReference"
 								}
 							]
