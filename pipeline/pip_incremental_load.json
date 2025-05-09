@@ -56,8 +56,6 @@
 						{
 							"name": "ADLS_to_target",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "source to adls",
@@ -220,8 +218,6 @@
 						{
 							"name": "ADLS_STAGE_to_ ARCHIEVE",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "ADLS_to_target",
@@ -315,8 +311,6 @@
 						{
 							"name": "Delete_30days_file",
 							"type": "Delete",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "ADLS_STAGE_to_ ARCHIEVE",
