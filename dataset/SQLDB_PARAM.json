@@ -6,21 +6,19 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"SOURCE_SCHEMA": {
-				"type": "string"
-			},
 			"SOURCE_TABLE": {
 				"type": "string"
+			},
+			"SOURCE_SCHEMA": {
+				"type": "string",
+				"defaultValue": "MDC"
 			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": {
-				"value": "@dataset().SOURCE_SCHEMA",
-				"type": "Expression"
-			},
+			"schema": "MDC",
 			"table": {
 				"value": "@dataset().SOURCE_TABLE",
 				"type": "Expression"
