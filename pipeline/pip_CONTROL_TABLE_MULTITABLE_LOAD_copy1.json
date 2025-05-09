@@ -149,7 +149,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "AzureSqlSource",
+									"type": "SqlServerSource",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -176,11 +176,11 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ADF_TRAIN_SQLDB",
+									"referenceName": "ONPREM_SQLSERVER_param",
 									"type": "DatasetReference",
 									"parameters": {
 										"SCHEMA": "dbo",
-										"table_name": {
+										"SOURCE_TABLE": {
 											"value": "@item().SOURCE_TABLE",
 											"type": "Expression"
 										}
