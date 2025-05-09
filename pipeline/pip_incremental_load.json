@@ -186,11 +186,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"SOURCE_SCHEMA": {
-											"value": "@item().SOURCE_SCHEMA",
+											"value": "@{item().SOURCE_SCHEMA}",
 											"type": "Expression"
 										},
 										"SOURCE_TABLE": {
-											"value": "@item().SOURCE_TABLE",
+											"value": "@{item().SOURCE_TABLE}",
 											"type": "Expression"
 										}
 									}
