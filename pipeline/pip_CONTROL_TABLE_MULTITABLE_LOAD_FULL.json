@@ -34,8 +34,6 @@
 			{
 				"name": "Traverse_control_values",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "FETCH METADATA CONTROL_TABLE",
@@ -85,9 +83,7 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false,
-									"tableOption": "autoCreate",
-									"disableMetricsCollection": false
+									"sqlWriterUseTableLock": false
 								},
 								"enableStaging": false,
 								"translator": {
@@ -124,12 +120,12 @@
 									"referenceName": "ADF_TRAIN_SQLDB",
 									"type": "DatasetReference",
 									"parameters": {
-										"SOURCE_SCHEMA": {
-											"value": "@{item().SOURCE_SCHEMA}",
+										"CONTAINER": {
+											"value": "@pipeline().parameters.p_container",
 											"type": "Expression"
 										},
-										"SOURCE_TABLE": {
-											"value": "@concat(item().SOURCE_TABLE)",
+										"DIRECTORY": {
+											"value": "@pipeline().parameters.p_directory",
 											"type": "Expression"
 										}
 									}
