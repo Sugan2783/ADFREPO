@@ -346,14 +346,7 @@
 										}
 									}
 								},
-								"logStorageSettings": {
-									"linkedServiceName": {
-										"referenceName": "BlobLinkedService",
-										"type": "LinkedServiceReference"
-									},
-									"path": "adftraining/LOG"
-								},
-								"enableLogging": true,
+								"enableLogging": false,
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
