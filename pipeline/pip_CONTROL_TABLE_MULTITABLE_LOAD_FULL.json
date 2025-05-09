@@ -16,19 +16,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "SELECT * FROM MDF.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system} and LOAD_TYPE = @{pipeline().parameters.p_load_type}",
-							"type": "Expression"
-						},
+						"type": "SqlServerSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ADF_TRAIN_SQLDB",
+						"referenceName": "ONPREM_SQLSERVER_param",
 						"type": "DatasetReference",
 						"parameters": {
-							"SOURCE_SCHEMA": "MD",
+							"SOURCE_SCHEMA": "MDF",
 							"SOURCE_TABLE": "CONTROL_TABLE"
 						}
 					},
@@ -38,6 +34,8 @@
 			{
 				"name": "Traverse_control_values",
 				"type": "ForEach",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "FETCH METADATA CONTROL_TABLE",
@@ -182,7 +180,7 @@
 									"referenceName": "ONPREM_SQLSERVER_param",
 									"type": "DatasetReference",
 									"parameters": {
-										"SCHEMA": {
+										"SOURCE_SCHEMA": {
 											"value": "@{item().SOURCE_SCHEMA}",
 											"type": "Expression"
 										},
