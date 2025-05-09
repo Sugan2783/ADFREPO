@@ -18,7 +18,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * FROM MDF.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system}",
+							"value": "SELECT * FROM MDF.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system} and LOAD_TYPE = @{pipeline().parameters.p_load_type}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
