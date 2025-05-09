@@ -153,7 +153,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from @{item().SOURCE_SCHEMA}.@{item().SOURCE_TABLE} where claim_date > @{item().LAST_MODIFIED_DATE}",
+										"value": "select * from @{item().SOURCE_SCHEMA}.@{item().SOURCE_TABLE} where claim_date > @'{item().LAST_MODIFIED_DATE}'",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
