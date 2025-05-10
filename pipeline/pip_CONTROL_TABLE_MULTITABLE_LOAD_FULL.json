@@ -44,8 +44,6 @@
 			{
 				"name": "Traverse_control_values",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "FETCH METADATA CONTROL_TABLE",
@@ -94,6 +92,10 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "truncate table '@{item().SOURCE_SCHEMA}'.'@{item().SOURCE_TABLE}'",
+										"type": "Expression"
+									},
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false,
 									"tableOption": "autoCreate",
