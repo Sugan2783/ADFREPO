@@ -87,12 +87,11 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"preCopyScript": {
-										"value": "truncate table '@{item().TARGET_SCHEMA}','.','@{item().TARGET_TABLE}'",
+										"value": "truncate table @{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}",
 										"type": "Expression"
 									},
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false,
-									"tableOption": "autoCreate",
 									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
