@@ -216,8 +216,8 @@
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SOURCE_SCHEMA": "hr",
-							"SOURCE_TABLE": "employees"
+							"TARGET_SCHEMA": "hr",
+							"TARGET_TABLE": "employees"
 						}
 					}
 				],
@@ -226,8 +226,8 @@
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SOURCE_SCHEMA": "hr",
-							"SOURCE_TABLE": "employees"
+							"TARGET_SCHEMA": "hr",
+							"TARGET_TABLE": "employees"
 						}
 					}
 				]

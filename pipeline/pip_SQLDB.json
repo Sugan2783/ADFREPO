@@ -42,8 +42,8 @@
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SOURCE_SCHEMA": "hr",
-							"SOURCE_TABLE": "product_dim"
+							"TARGET_SCHEMA": "hr",
+							"TARGET_TABLE": "product_dim"
 						}
 					}
 				],
@@ -52,8 +52,8 @@
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SOURCE_SCHEMA": "dbo",
-							"SOURCE_TABLE": "product_dim_new"
+							"TARGET_SCHEMA": "dbo",
+							"TARGET_TABLE": "product_dim_new"
 						}
 					}
 				]
