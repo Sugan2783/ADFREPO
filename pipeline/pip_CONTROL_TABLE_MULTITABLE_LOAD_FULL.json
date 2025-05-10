@@ -25,8 +25,18 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ONPREM_SQLSERVER",
-						"type": "DatasetReference"
+						"referenceName": "ONPREM_SQLSERVER_param",
+						"type": "DatasetReference",
+						"parameters": {
+							"SOURCE_SCHEMA": {
+								"value": " ",
+								"type": "Expression"
+							},
+							"SOURCE_TABLE": {
+								"value": " ",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": false
 				}
@@ -34,6 +44,8 @@
 			{
 				"name": "Traverse_control_values",
 				"type": "ForEach",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "FETCH METADATA CONTROL_TABLE",
