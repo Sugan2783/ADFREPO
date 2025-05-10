@@ -17,16 +17,16 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM MDF.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system}",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ONPREM_SQLSERVER_param",
-						"type": "DatasetReference",
-						"parameters": {
-							"SOURCE_SCHEMA": "MDF",
-							"SOURCE_TABLE": "CONTROL_TABLE"
-						}
+						"referenceName": "ONPREM_SQLSERVER",
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
