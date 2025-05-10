@@ -132,12 +132,12 @@
 									"referenceName": "SQLDB_PARAM",
 									"type": "DatasetReference",
 									"parameters": {
-										"SOURCE_TABLE": {
-											"value": "@item().SOURCE_TABLE",
+										"TARGET_TABLE": {
+											"value": "@{item().TARGET_TABLE}",
 											"type": "Expression"
 										},
-										"SOURCE_SCHEMA": {
-											"value": "@item().SOURCE_SCHEMA",
+										"TARGET_SCHEMA": {
+											"value": "@{item().TARGET_SCHEMA}",
 											"type": "Expression"
 										}
 									}
