@@ -362,8 +362,8 @@
 						"referenceName": "ADF_TRAIN_SQLDB",
 						"type": "DatasetReference",
 						"parameters": {
-							"SOURCE_SCHEMA": "MD",
-							"SOURCE_TABLE": "CONTROL_TABLE"
+							"TARGET_SCHEMA": "MD",
+							"TARGET_TABLE": "CONTROL_TABLE"
 						}
 					},
 					"firstRowOnly": false
