@@ -5,8 +5,6 @@
 			{
 				"name": "Traverse_control_values",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "FETCH METADATA CONTROL_TABLE",
