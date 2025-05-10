@@ -18,11 +18,11 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": {
-				"value": "@dataset().SOURCE_SCHEMA",
+				"value": "@dataset().TARGET_SCHEMA",
 				"type": "Expression"
 			},
 			"table": {
-				"value": "@dataset().SOURCE_TABLE",
+				"value": "@dataset().TARGET_TABLE",
 				"type": "Expression"
 			}
 		}
