@@ -120,7 +120,14 @@
 							"outputs": [
 								{
 									"referenceName": "SQLDB_PARAM",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"SOURCE_TABLE": {
+											"value": "@item().SOURCE_TABLE",
+											"type": "Expression"
+										},
+										"SOURCE_SCHEMA": "MDC"
+									}
 								}
 							]
 						},
