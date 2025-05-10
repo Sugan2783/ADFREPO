@@ -144,8 +144,6 @@
 						{
 							"name": "source to adls",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -226,8 +224,6 @@
 						{
 							"name": "ADLS_STAGE_to_ ARCHIEVE",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "ADLS_to_target",
@@ -321,8 +317,6 @@
 						{
 							"name": "Delete_30days_file",
 							"type": "Delete",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "ADLS_STAGE_to_ ARCHIEVE",
@@ -372,8 +366,6 @@
 						{
 							"name": "update lastmodified date",
 							"type": "Script",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Delete_30days_file",
