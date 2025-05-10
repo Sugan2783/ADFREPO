@@ -18,9 +18,12 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "MDC",
+			"schema": {
+				"value": "@dataset().TARGET_SCHEMA",
+				"type": "Expression"
+			},
 			"table": {
-				"value": "@dataset().SOURCE_TABLE",
+				"value": "@dataset().TARGET_TABLE",
 				"type": "Expression"
 			}
 		}
