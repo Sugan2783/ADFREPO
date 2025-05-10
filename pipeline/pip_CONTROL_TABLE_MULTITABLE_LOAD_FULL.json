@@ -140,7 +140,10 @@
 											"value": "@item().SOURCE_TABLE",
 											"type": "Expression"
 										},
-										"SOURCE_SCHEMA": "MDC"
+										"SOURCE_SCHEMA": {
+											"value": "@item().SOURCE_SCHEMA",
+											"type": "Expression"
+										}
 									}
 								}
 							]
