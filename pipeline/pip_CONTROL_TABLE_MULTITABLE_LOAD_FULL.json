@@ -378,7 +378,7 @@
 		"parameters": {
 			"p_source_system": {
 				"type": "string",
-				"defaultValue": "'SQL_SERVER'"
+				"defaultValue": "SQL_SERVER"
 			},
 			"p_container": {
 				"type": "string",
