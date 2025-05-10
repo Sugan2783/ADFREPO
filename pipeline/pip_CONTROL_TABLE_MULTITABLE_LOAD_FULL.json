@@ -3,42 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "FETCH METADATA CONTROL_TABLE",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM MD.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system}",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "ADF_TRAIN_SQLDB",
-						"type": "DatasetReference",
-						"parameters": {
-							"SOURCE_SCHEMA": {
-								"value": " ",
-								"type": "Expression"
-							},
-							"SOURCE_TABLE": {
-								"value": " ",
-								"type": "Expression"
-							}
-						}
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
 				"name": "Traverse_control_values",
 				"type": "ForEach",
 				"state": "Inactive",
@@ -373,12 +337,45 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "FETCH METADATA CONTROL_TABLE",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM MD.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = @{pipeline().parameters.p_source_system}",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference",
+						"parameters": {
+							"SOURCE_SCHEMA": "MD",
+							"SOURCE_TABLE": "CONTROL_TABLE"
+						}
+					},
+					"firstRowOnly": false
+				}
 			}
 		],
 		"parameters": {
 			"p_source_system": {
 				"type": "string",
-				"defaultValue": "SQL_SERVER"
+				"defaultValue": "'SQL_SERVER'"
 			},
 			"p_container": {
 				"type": "string",
