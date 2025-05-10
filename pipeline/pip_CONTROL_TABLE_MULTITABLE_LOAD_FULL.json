@@ -18,7 +18,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * FROM MDF.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = '@{pipeline().parameters.p_source_system}' ",
+							"value": "SELECT * FROM MDC.CONTROL_TABLE WHERE IS_ACTIVE_IND = 'Y' and SOURCE_SYSTEM = '@{pipeline().parameters.p_source_system}' ",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
