@@ -1,10 +1,6 @@
 {
 	"name": "SNOWFLAKE_param",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "Snowflake1",
-			"type": "LinkedServiceReference"
-		},
 		"parameters": {
 			"schema": {
 				"type": "string"

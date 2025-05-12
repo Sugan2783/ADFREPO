@@ -1,10 +1,6 @@
 {
 	"name": "ONPREM_SQLSERVER",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "onpremSqlServer",
-			"type": "LinkedServiceReference"
-		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [
