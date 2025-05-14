@@ -29,7 +29,8 @@
 					"dataset": {
 						"referenceName": "SRC_JSON",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
