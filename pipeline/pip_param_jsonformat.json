@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "firstrow lookup",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -38,7 +38,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "firstrow lookup",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -52,7 +52,7 @@
 				"typeProperties": {
 					"variableName": "v_json",
 					"value": {
-						"value": "@{activity('Lookup1').output.firstRow.AUTHOR_UID}",
+						"value": "@{activity('firstrow lookup').output.firstRow.AUTHOR_UID}",
 						"type": "Expression"
 					}
 				}
@@ -125,7 +125,7 @@
 				]
 			},
 			{
-				"name": "Lookup1_copy1",
+				"name": "multiline lookup",
 				"type": "Lookup",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
@@ -164,7 +164,7 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "Lookup1_copy1",
+						"activity": "multiline lookup",
 						"dependencyConditions": [
 							"Succeeded"
 						]
