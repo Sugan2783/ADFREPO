@@ -90,7 +90,14 @@
 										"value": "truncate table @{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}",
 										"type": "Expression"
 									},
-									"writeBehavior": "insert",
+									"writeBehavior": "upsert",
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": {
+											"value": "@json(concat('[\"',item().update_column,'\"]'))",
+											"type": "Expression"
+										}
+									},
 									"sqlWriterUseTableLock": false,
 									"disableMetricsCollection": false
 								},
