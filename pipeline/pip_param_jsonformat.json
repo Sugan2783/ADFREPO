@@ -50,9 +50,9 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "v_json_new",
+					"variableName": "V_json",
 					"value": {
-						"value": "@activity('Lookup1').output.firstRow.AUTHOR_ID",
+						"value": "@{activity('Lookup1').output.firstRow.AUTHOR_ID}",
 						"type": "Expression"
 					}
 				}
