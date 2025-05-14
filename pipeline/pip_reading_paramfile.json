@@ -60,7 +60,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from dbo.learnit_batch_employee where dept_id = @{activity('read_param_file').output.firstRow.department_id}",
+							"value": "select * from dbo.learnit_batch_employee where id = @{activity('read_param_file').output.firstRow.department_id}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
