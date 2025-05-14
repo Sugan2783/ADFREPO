@@ -50,7 +50,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "V_json",
+					"variableName": "v_json",
 					"value": {
 						"value": "@{activity('Lookup1').output.firstRow.AUTHOR_UID}",
 						"type": "Expression"
@@ -80,7 +80,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from dbo.param_json where AUTHOR_UID = @{variables('v_json_new')}",
+							"value": "select * from dbo.param_json where AUTHOR_UID = @{variables('v_json')}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
