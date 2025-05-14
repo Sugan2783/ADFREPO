@@ -56,7 +56,7 @@
 				"typeProperties": {
 					"variableName": "v_dept_id",
 					"value": {
-						"value": "@activity('read_param_file').output.firstRow.value",
+						"value": "@activity('read_param_file').output.firstRow",
 						"type": "Expression"
 					}
 				}
