@@ -80,7 +80,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from dbo.param_json where AUTHOR_ID = @{variables('v_json_new')}",
+							"value": "select * from dbo.param_json where AUTHOR_UID = @{variables('v_json_new')}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
