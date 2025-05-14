@@ -178,7 +178,7 @@
 				"typeProperties": {
 					"variableName": "v_json_new",
 					"value": {
-						"value": "@activity('Lookup1_copy1').output.value[1].CUST_ID",
+						"value": "@activity('multiline lookup').output[1].CUST_ID",
 						"type": "Expression"
 					}
 				}
