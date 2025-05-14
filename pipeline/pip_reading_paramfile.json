@@ -38,37 +38,11 @@
 				}
 			},
 			{
-				"name": "Set variable1",
-				"type": "SetVariable",
+				"name": "Copy data1",
+				"type": "Copy",
 				"dependsOn": [
 					{
 						"activity": "read_param_file",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "v_dept_id1",
-					"value": {
-						"value": "@activity('read_param_file').output.firstRow.value[1]",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "Copy data1",
-				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [
-					{
-						"activity": "Set variable1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -83,8 +57,53 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "select * from dbo.learnit_batch_employee where dept_id = @{activity('read_param_file').output.firstRow.department_id}",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference",
+						"parameters": {
+							"TARGET_SCHEMA": "dbo",
+							"TARGET_TABLE": {
+								"value": "learnit_batch_employee",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference",
+						"parameters": {
+							"TARGET_SCHEMA": "dbo",
+							"TARGET_TABLE": "LKP_PARAM_RESULT_EMP"
+						}
+					}
+				]
 			}
 		],
 		"variables": {
