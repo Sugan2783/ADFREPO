@@ -49,7 +49,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "V_json",
+					"variableName": "v_json_new",
 					"value": {
 						"value": "@activity('Lookup1').output.firstRow.AUTHOR_UID",
 						"type": "Expression"
@@ -78,6 +78,9 @@
 		"variables": {
 			"V_json": {
 				"type": "String"
+			},
+			"v_json_new": {
+				"type": "Integer"
 			}
 		},
 		"folder": {
