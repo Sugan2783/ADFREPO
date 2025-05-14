@@ -52,7 +52,7 @@
 				"typeProperties": {
 					"variableName": "V_json",
 					"value": {
-						"value": "@{activity('Lookup1').output.firstRow.AUTHOR_ID}",
+						"value": "@{activity('Lookup1').output.firstRow.AUTHOR_UID}",
 						"type": "Expression"
 					}
 				}
