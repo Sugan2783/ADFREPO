@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "read_param_file",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -36,8 +36,37 @@
 						}
 					}
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "read_param_file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_dept_id",
+					"value": {
+						"value": "@activity('read_param_file').output.firstRow.value",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"v_dept_id": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "ADF_TRAINING_NEW"
 		},
