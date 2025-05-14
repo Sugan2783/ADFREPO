@@ -54,17 +54,43 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "v_dept_id",
+					"variableName": "v_dept_id1",
 					"value": {
 						"value": "@activity('read_param_file').output.firstRow",
 						"type": "Expression"
 					}
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
 				}
 			}
 		],
 		"variables": {
 			"v_dept_id": {
 				"type": "String"
+			},
+			"v_dept_id1": {
+				"type": "Integer"
 			}
 		},
 		"folder": {
