@@ -180,7 +180,7 @@
 				"typeProperties": {
 					"variableName": "v_json_new",
 					"value": {
-						"value": "@{activity('Lookup1_copy1').output.CUST_ID}",
+						"value": "@activity('Lookup1_copy1').output.value[1]",
 						"type": "Expression"
 					}
 				}
@@ -258,7 +258,7 @@
 				"type": "String"
 			},
 			"v_json_new": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"folder": {
