@@ -1,0 +1,55 @@
+{
+	"name": "pip_append_variable",
+	"properties": {
+		"activities": [
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "p_insurance_type",
+					"value": {
+						"value": "@array(variables('p_insurance_type')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "p_insurance_type",
+					"value": {
+						"value": "@array(['vehicle', 'property','Health','general'])",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"p_insurance_type": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "ADF_TRAINING_NEW"
+		},
+		"annotations": []
+	}
+}
