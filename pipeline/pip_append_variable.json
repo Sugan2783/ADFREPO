@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"variableName": "p_insurance_type",
 					"value": {
-						"value": "[\"dental\"]",
+						"value": "['dental']",
 						"type": "Expression"
 					}
 				}
