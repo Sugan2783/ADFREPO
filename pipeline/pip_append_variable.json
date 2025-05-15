@@ -5,8 +5,6 @@
 			{
 				"name": "Append variable1",
 				"type": "AppendVariable",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Set variable1",
@@ -19,7 +17,7 @@
 				"typeProperties": {
 					"variableName": "p_insurance_type",
 					"value": {
-						"value": "@array(variables('p_insurance_type')",
+						"value": "'dental'",
 						"type": "Expression"
 					}
 				}
