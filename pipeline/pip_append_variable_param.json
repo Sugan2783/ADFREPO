@@ -74,7 +74,10 @@
 			"p_insurance_type": {
 				"type": "Array",
 				"defaultValue": [
-					"['vehicle','morgage','house','health']"
+					"vehicle",
+					"morgage",
+					"house",
+					"health"
 				]
 			},
 			"insurance_add": {
