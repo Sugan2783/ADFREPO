@@ -130,7 +130,7 @@
 										"CONTAINER": "adftraining",
 										"DIRECTORY": "PROJECTOUTPUT",
 										"FILENAME": {
-											"value": "@replace(item().name,'.csv','meta')",
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
