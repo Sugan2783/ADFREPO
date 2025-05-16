@@ -21,23 +21,15 @@
 						"parameters": {
 							"CONTAINER": "adftraining",
 							"DIRECTORY": "parameter",
-							"FILENAME": {
-								"value": " ",
-								"type": "Expression"
-							}
+							"FILENAME": "param_file.csv"
 						}
 					},
 					"fieldList": [
 						"columnCount",
-						"childItems",
 						"structure"
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
-						"modifiedDatetimeEnd": {
-							"value": "@addDays(utcNow(), -5)",
-							"type": "Expression"
-						},
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
