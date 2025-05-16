@@ -30,9 +30,6 @@
 					"fieldList": [
 						"columnCount",
 						"childItems",
-						"exists",
-						"contentMD5",
-						"size",
 						"structure"
 					],
 					"storeSettings": {
@@ -84,7 +81,6 @@
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
-										"wildcardFileName": "*.csv",
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
