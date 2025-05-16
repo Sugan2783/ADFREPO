@@ -110,7 +110,7 @@
 										"CONTAINER": "data",
 										"DIRECTORY": "PROJECT",
 										"FILENAME": {
-											"value": "@item().name",
+											"value": "@concat(item().name,'.csv')",
 											"type": "Expression"
 										}
 									}
@@ -124,7 +124,7 @@
 										"CONTAINER": "adftraining",
 										"DIRECTORY": "PROJECTOUTPUT",
 										"FILENAME": {
-											"value": "@item().name",
+											"value": "@replace(item().name,'.csv','meta')",
 											"type": "Expression"
 										}
 									}
