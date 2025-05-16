@@ -75,6 +75,7 @@
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
+										"wildcardFileName": "*.csv",
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -110,7 +111,7 @@
 										"CONTAINER": "data",
 										"DIRECTORY": "PROJECT",
 										"FILENAME": {
-											"value": "@concat(item().name,'.csv')",
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
