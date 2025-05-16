@@ -113,8 +113,8 @@
 									"referenceName": "ADLS_PARAM",
 									"type": "DatasetReference",
 									"parameters": {
-										"CONTAINER": "data",
-										"DIRECTORY": "PROJECT",
+										"CONTAINER": "adftraining",
+										"DIRECTORY": "parameter",
 										"FILENAME": {
 											"value": "@item().name",
 											"type": "Expression"
@@ -128,9 +128,9 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"CONTAINER": "adftraining",
-										"DIRECTORY": "PROJECTOUTPUT",
+										"DIRECTORY": "STAGE",
 										"FILENAME": {
-											"value": "@item().name",
+											"value": "@replace(item().name,'.csv','_reference.csv')",
 											"type": "Expression"
 										}
 									}
