@@ -185,7 +185,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"CONTAINER": "adftraining",
-													"DIRECTORY": "REFERENCE_OUTPUT",
+													"DIRECTORY": "OUTPUT_REFER",
 													"FILENAME": {
 														"value": "@item().name",
 														"type": "Expression"
