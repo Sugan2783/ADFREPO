@@ -58,6 +58,30 @@
 									"type": "DelimitedTextReadSettings"
 								}
 							}
+						},
+						{
+							"name": "Set variable3",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata4",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "reference_file",
+								"value": {
+									"value": "@item().type",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -145,13 +169,13 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "ForEach1",
+						"activity": "Set variable2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "Set variable2",
+						"activity": "Set variable4",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -348,6 +372,30 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Set variable4",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_reference",
+					"value": {
+						"value": "@variables('reference_file')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
@@ -355,6 +403,12 @@
 				"type": "String"
 			},
 			"v_file_structure": {
+				"type": "String"
+			},
+			"reference_file": {
+				"type": "String"
+			},
+			"v_reference": {
 				"type": "String"
 			}
 		},
