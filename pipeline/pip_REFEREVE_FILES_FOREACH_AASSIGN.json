@@ -7,12 +7,6 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata3",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
 						"activity": "Get Metadata2",
 						"dependencyConditions": [
 							"Succeeded"
@@ -102,6 +96,8 @@
 			{
 				"name": "Get Metadata3",
 				"type": "GetMetadata",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
