@@ -19,7 +19,7 @@
 					"storedProcedureParameters": {
 						"Id": {
 							"value": "",
-							"type": "Int64"
+							"type": "String"
 						},
 						"Name": {
 							"value": "",
@@ -31,7 +31,7 @@
 						},
 						"DeptId": {
 							"value": "",
-							"type": "Int64"
+							"type": "String"
 						}
 					}
 				},
