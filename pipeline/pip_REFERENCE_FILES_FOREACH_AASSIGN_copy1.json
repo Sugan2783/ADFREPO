@@ -20,7 +20,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"CONTAINER": "adftraining",
-							"DIRECTORY": "REFERENCE_FILES",
+							"DIRECTORY": "INPUT",
 							"FILENAME": {
 								"value": " ",
 								"type": "Expression"
