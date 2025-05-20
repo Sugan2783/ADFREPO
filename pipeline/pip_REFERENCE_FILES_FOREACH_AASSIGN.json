@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Metadata2').output.childItems",
+						"value": "@activity('Get Metadata3').output.childItems",
 						"type": "Expression"
 					},
 					"activities": [
@@ -135,10 +135,61 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_file_structure",
+					"value": {
+						"value": "@activity('Get Metadata4').output.structure",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_file_structure",
+					"value": {
+						"value": "@variables('file_name')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
 			"file_name": {
+				"type": "String"
+			},
+			"v_file_structure": {
 				"type": "String"
 			}
 		},
