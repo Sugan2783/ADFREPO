@@ -17,8 +17,20 @@
 				"typeProperties": {
 					"storedProcedureName": "[dbo].[SP_EMPLOYEE]",
 					"storedProcedureParameters": {
-						"id": {
+						"Id": {
 							"value": "1",
+							"type": "Int16"
+						},
+						"Name": {
+							"value": "",
+							"type": "String"
+						},
+						"Gender": {
+							"value": "",
+							"type": "String"
+						},
+						"DeptId": {
+							"value": "",
 							"type": "Int16"
 						}
 					}
