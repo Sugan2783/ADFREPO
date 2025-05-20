@@ -1,5 +1,5 @@
 {
-	"name": "pip_REFEREVE_FILES_FOREACH_AASSIGN",
+	"name": "pip_REFERENCE_FILES_FOREACH_AASSIGN",
 	"properties": {
 		"activities": [
 			{
@@ -16,41 +16,17 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Metadata1').output.childItems",
+						"value": "@activity('Get Metadata2').output.childItems",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "Get Metadata1",
-							"type": "GetMetadata",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
+							"name": "Wait1",
+							"type": "Wait",
 							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
 							"userProperties": [],
 							"typeProperties": {
-								"dataset": {
-									"referenceName": "ADLS_PARAM",
-									"type": "DatasetReference",
-									"parameters": {
-										"CONTAINER": "adftraining",
-										"DIRECTORY": "INPUT"
-									}
-								},
-								"fieldList": [],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
+								"waitTimeInSeconds": 13
 							}
 						}
 					]
