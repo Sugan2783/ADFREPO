@@ -15,7 +15,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[SP_EMPLOYEE]"
+					"storedProcedureName": "[dbo].[SP_EMPLOYEE]",
+					"storedProcedureParameters": {
+						"id": {
+							"value": "1",
+							"type": "Int16"
+						}
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "SQL_SEEVER_ONPREM",
