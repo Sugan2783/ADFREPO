@@ -32,6 +32,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -57,35 +58,6 @@
 						"type": "Expression"
 					},
 					"activities": [
-						{
-							"name": "REFERENCE_file",
-							"type": "GetMetadata",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataset": {
-									"referenceName": "ONPREM_SQLSERVER_param",
-									"type": "DatasetReference",
-									"parameters": {
-										"SOURCE_SCHEMA": "dbo",
-										"SOURCE_TABLE": {
-											"value": "@replace(item().name,'.csv','_reference.csv')",
-											"type": "Expression"
-										}
-									}
-								},
-								"fieldList": [
-									"structure"
-								]
-							}
-						},
 						{
 							"name": "INPUT",
 							"type": "GetMetadata",
@@ -116,6 +88,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -134,7 +107,7 @@
 									]
 								},
 								{
-									"activity": "REFERENCE_file",
+									"activity": "reference_file",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -222,6 +195,44 @@
 										]
 									}
 								]
+							}
+						},
+						{
+							"name": "reference_file",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ADLS_PARAM",
+									"type": "DatasetReference",
+									"parameters": {
+										"CONTAINER": "adftraining",
+										"DIRECTORY": "REFERENCE_FILES",
+										"FILENAME": {
+											"value": "@replace(item().name,'.csv','_reference.csv')",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"structure"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							}
 						}
 					]
