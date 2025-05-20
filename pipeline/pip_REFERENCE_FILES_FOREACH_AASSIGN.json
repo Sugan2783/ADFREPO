@@ -143,12 +143,18 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "ForEach2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Get Metadata4').output.structure),",
+						"value": "@equals(activity('Get Metadata4').output.structure,activity('Get Metadata5').output.structure)",
 						"type": "Expression"
 					}
 				}
