@@ -71,12 +71,11 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "ADLS_PARAM",
+									"referenceName": "ONPREM_SQLSERVER_param",
 									"type": "DatasetReference",
 									"parameters": {
-										"CONTAINER": "adftraining",
-										"DIRECTORY": "REFERENCE_FILES",
-										"FILENAME": {
+										"SOURCE_SCHEMA": "dbo",
+										"SOURCE_TABLE": {
 											"value": "@replace(item().name,'.csv','_reference.csv')",
 											"type": "Expression"
 										}
@@ -84,14 +83,7 @@
 								},
 								"fieldList": [
 									"structure"
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
+								]
 							}
 						},
 						{
