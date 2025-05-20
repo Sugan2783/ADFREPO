@@ -5,8 +5,6 @@
 			{
 				"name": "ForEach1",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Get Metadata3",
@@ -126,8 +124,6 @@
 			{
 				"name": "Get Metadata3",
 				"type": "GetMetadata",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -165,8 +161,6 @@
 			{
 				"name": "If Condition1",
 				"type": "IfCondition",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Set variable2",
@@ -184,7 +178,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Get Metadata4').output.structure,activity('Get Metadata5').output.structure)",
+						"value": "@equals(variables('v_file_structure'),variables('v_reference'))",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -243,7 +237,7 @@
 										"CONTAINER": "adftraining",
 										"DIRECTORY": "INPUT",
 										"FILENAME": {
-											"value": " ",
+											"value": "@activity('Get Metadata2').output.itemName",
 											"type": "Expression"
 										}
 									}
