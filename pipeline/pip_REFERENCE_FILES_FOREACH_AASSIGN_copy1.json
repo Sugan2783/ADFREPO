@@ -317,7 +317,7 @@
 							"typeProperties": {
 								"variableName": "file_name",
 								"value": {
-									"value": "@item().structure",
+									"value": "@item().type",
 									"type": "Expression"
 								}
 							}
