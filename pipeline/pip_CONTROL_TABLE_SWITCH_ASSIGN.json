@@ -349,7 +349,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"on": {
-									"value": "@item().name",
+									"value": "select * from MD.CONTROL_TABLE",
 									"type": "Expression"
 								},
 								"cases": [
