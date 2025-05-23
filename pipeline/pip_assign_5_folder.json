@@ -79,7 +79,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "o_folder_name",
+					"variableName": "v_folder_name",
 					"value": {
 						"value": "@activity('Filter1').output.value",
 						"type": "Expression"
@@ -143,10 +143,10 @@
 		],
 		"variables": {
 			"v_folder_name": {
-				"type": "String"
+				"type": "Array"
 			},
 			"o_folder_name": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"folder": {
