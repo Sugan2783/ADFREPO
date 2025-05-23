@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "read file for folder name",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -35,15 +35,15 @@
 							"FILENAME": "Folder_name.csv"
 						}
 					},
-					"firstRowOnly": false
+					"firstRowOnly": true
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "traverse folder name",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "read file for folder name",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -89,6 +89,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -119,6 +120,10 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"p_folder_names": {
+										"value": "@item().FOLDER_NAME",
+										"type": "Expression"
+									},
+									"p_Files_name": {
 										"value": "@activity('Get all files').output.childItems",
 										"type": "Expression"
 									}
