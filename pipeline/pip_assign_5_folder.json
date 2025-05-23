@@ -102,7 +102,18 @@
 					"items": {
 						"value": "@variables('o_folder_name')",
 						"type": "Expression"
-					}
+					},
+					"activities": [
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
 				}
 			},
 			{
@@ -123,7 +134,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "o_folder_name",
-					"value": ""
+					"value": {
+						"value": "@variables('v_folder_name')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
