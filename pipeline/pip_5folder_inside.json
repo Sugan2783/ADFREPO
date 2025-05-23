@@ -41,8 +41,6 @@
 			{
 				"name": "traverse folder name",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "read file for folder name",
