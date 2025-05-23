@@ -6,9 +6,20 @@
 				"name": "ForEach1",
 				"type": "ForEach",
 				"dependsOn": [],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.p_folder_names",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"p_folder_names": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "ADF_TRAINING_NEW"
 		},

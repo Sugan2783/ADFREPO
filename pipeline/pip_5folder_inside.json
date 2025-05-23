@@ -116,7 +116,13 @@
 									"referenceName": "pip_5folder_second_mapping",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"p_folder_names": {
+										"value": "@activity('Get all files').output.childItems",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
