@@ -1,0 +1,9 @@
+{
+	"name": "pip_5folder_inside",
+	"properties": {
+		"folder": {
+			"name": "ADF_TRAINING_NEW"
+		},
+		"annotations": []
+	}
+}
