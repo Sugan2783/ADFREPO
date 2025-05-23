@@ -1,0 +1,17 @@
+{
+	"name": "pip_5folder_second_mapping",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": []
+			}
+		],
+		"folder": {
+			"name": "ADF_TRAINING_NEW"
+		},
+		"annotations": []
+	}
+}
