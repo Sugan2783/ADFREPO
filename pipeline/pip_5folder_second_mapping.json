@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@pipeline().parameters.p_folder_names",
+						"value": "@pipeline().parameters.p_Files_name",
 						"type": "Expression"
 					},
 					"activities": [
@@ -37,14 +37,48 @@
 										"type": "DelimitedTextReadSettings"
 									}
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
 									"referenceName": "ADLS_PARAM",
 									"type": "DatasetReference",
 									"parameters": {
-										"CONTAINER": "data"
+										"CONTAINER": "data",
+										"DIRECTORY": {
+											"value": "@pipeline().parameters.p_folder_names",
+											"type": "Expression"
+										},
+										"FILENAME": {
+											"value": " ",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ONPREM_SQLSERVER_param",
+									"type": "DatasetReference",
+									"parameters": {
+										"SOURCE_SCHEMA": "dbo",
+										"SOURCE_TABLE": {
+											"value": "@replace(item().name,'.csv','p_load')",
+											"type": "Expression"
+										}
 									}
 								}
 							]
