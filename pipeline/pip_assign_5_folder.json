@@ -63,8 +63,8 @@
 				}
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "If Condition1",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "Filter1",
@@ -75,52 +75,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Filter1').output",
+					"expression": {
+						"value": "@equals(activity('Filter1').output.type,'DATALOAD')",
 						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Get Metadata2",
-							"type": "GetMetadata",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataset": {
-									"referenceName": "ADLS_PARAM",
-									"type": "DatasetReference",
-									"parameters": {
-										"CONTAINER": "data",
-										"DIRECTORY": {
-											"value": " ",
-											"type": "Expression"
-										},
-										"FILENAME": {
-											"value": " ",
-											"type": "Expression"
-										}
-									}
-								},
-								"fieldList": [
-									"exists"
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							}
-						}
-					]
+					}
 				}
 			}
 		],
