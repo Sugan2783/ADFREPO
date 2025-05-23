@@ -52,7 +52,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output.value",
+						"value": "@activity('Execute Pipeline1').output.value",
 						"type": "Expression"
 					},
 					"activities": [
