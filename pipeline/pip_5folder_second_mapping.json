@@ -17,7 +17,7 @@
 		],
 		"parameters": {
 			"p_folder_names": {
-				"type": "string"
+				"type": "array"
 			}
 		},
 		"folder": {
