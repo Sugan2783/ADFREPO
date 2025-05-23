@@ -40,8 +40,8 @@
 				}
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "Filter1",
+				"type": "Filter",
 				"dependsOn": [
 					{
 						"activity": "Get Metadata1",
@@ -56,24 +56,10 @@
 						"value": "@activity('Get Metadata1').output.childItems",
 						"type": "Expression"
 					},
-					"activities": [
-						{
-							"name": "Filter1",
-							"type": "Filter",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"items": {
-									"value": "@item().type",
-									"type": "Expression"
-								},
-								"condition": {
-									"value": "@contains(item().Type,'Folder')",
-									"type": "Expression"
-								}
-							}
-						}
-					]
+					"condition": {
+						"value": "@contains(item().Type,'Folder')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
