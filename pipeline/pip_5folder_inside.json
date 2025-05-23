@@ -57,10 +57,8 @@
 					},
 					"activities": [
 						{
-							"name": "Get Metadata1",
+							"name": "Get all files",
 							"type": "GetMetadata",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -73,9 +71,22 @@
 							"typeProperties": {
 								"dataset": {
 									"referenceName": "ADLS_PARAM",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"CONTAINER": "data",
+										"DIRECTORY": {
+											"value": "@item().FOLDER_NAME",
+											"type": "Expression"
+										},
+										"FILENAME": {
+											"value": " ",
+											"type": "Expression"
+										}
+									}
 								},
-								"fieldList": [],
+								"fieldList": [
+									"childItems"
+								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"enablePartitionDiscovery": false
