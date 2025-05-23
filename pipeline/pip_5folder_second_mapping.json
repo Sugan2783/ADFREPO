@@ -89,7 +89,7 @@
 		],
 		"parameters": {
 			"p_folder_names": {
-				"type": "string"
+				"type": "array"
 			},
 			"p_Files_name": {
 				"type": "array"
