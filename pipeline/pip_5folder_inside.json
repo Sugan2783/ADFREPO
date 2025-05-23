@@ -52,9 +52,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Execute Pipeline1').output.value",
+						"value": "@activity('Execute Pipeline1').output",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Get all files",
@@ -100,6 +101,8 @@
 						{
 							"name": "Execute Pipeline1",
 							"type": "ExecutePipeline",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Get all files",
