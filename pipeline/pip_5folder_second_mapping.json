@@ -38,7 +38,7 @@
 									}
 								},
 								"sink": {
-									"type": "SqlServerSink",
+									"type": "AzureSqlSink",
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false
 								},
@@ -71,11 +71,11 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ONPREM_SQLSERVER_param",
+									"referenceName": "ADF_TRAIN_SQLDB",
 									"type": "DatasetReference",
 									"parameters": {
-										"SOURCE_SCHEMA": "dbo",
-										"SOURCE_TABLE": {
+										"TARGET_SCHEMA": "dbo",
+										"TARGET_TABLE": {
 											"value": "@replace(item().name,'.csv','p_load')",
 											"type": "Expression"
 										}
