@@ -80,7 +80,7 @@
 											"type": "Expression"
 										},
 										"FILENAME": {
-											"value": "@item().name",
+											"value": " ",
 											"type": "Expression"
 										}
 									}
