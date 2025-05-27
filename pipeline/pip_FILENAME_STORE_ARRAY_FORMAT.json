@@ -171,7 +171,7 @@
 		],
 		"variables": {
 			"v_filename": {
-				"type": "Array"
+				"type": "String"
 			},
 			"array_file_name": {
 				"type": "Array"
