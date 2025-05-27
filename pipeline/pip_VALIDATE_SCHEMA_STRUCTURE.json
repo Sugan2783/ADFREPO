@@ -93,7 +93,7 @@
 						"value": "@equals(activity('Get Metadata2').output.structure,activity('Get Metadata1').output.structure)",
 						"type": "Expression"
 					},
-					"ifTrueActivities": [
+					"ifFalseActivities": [
 						{
 							"name": "Copy data1",
 							"type": "Copy",
