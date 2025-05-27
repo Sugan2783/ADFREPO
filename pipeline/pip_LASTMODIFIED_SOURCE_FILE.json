@@ -29,8 +29,8 @@
 						}
 					},
 					"fieldList": [
-						"lastModified",
-						"childItems"
+						"childItems",
+						"lastModified"
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
