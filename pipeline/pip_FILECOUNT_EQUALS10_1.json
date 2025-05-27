@@ -59,12 +59,19 @@
 					},
 					"ifTrueActivities": [
 						{
-							"name": "Wait1",
-							"type": "Wait",
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
 							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
-								"waitTimeInSeconds": 10
+								"pipeline": {
+									"referenceName": "pip_FILECOUNT10_2",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
 							}
 						}
 					]
@@ -98,6 +105,9 @@
 		"variables": {
 			"v_count": {
 				"type": "Integer"
+			},
+			"filename": {
+				"type": "Array"
 			}
 		},
 		"folder": {
