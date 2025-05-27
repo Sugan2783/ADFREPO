@@ -70,31 +70,7 @@
 							"typeProperties": {
 								"variableName": "v_filename",
 								"value": {
-									"value": "@item().name",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Set variable2",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Set variable1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "array_file_name",
-								"value": {
-									"value": "@variables('v_filename')",
+									"value": "@array(item().name)",
 									"type": "Expression"
 								}
 							}
