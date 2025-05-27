@@ -59,20 +59,6 @@
 					},
 					"ifTrueActivities": [
 						{
-							"name": "Execute Pipeline1",
-							"type": "ExecutePipeline",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"waitOnCompletion": true
-							}
-						},
-						{
 							"name": "Wait1",
 							"type": "Wait",
 							"dependsOn": [],
