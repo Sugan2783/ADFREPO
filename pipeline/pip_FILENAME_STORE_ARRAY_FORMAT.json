@@ -165,6 +165,8 @@
 									{
 										"name": "Set variable2",
 										"type": "SetVariable",
+										"state": "Inactive",
+										"onInactiveMarkAs": "Succeeded",
 										"dependsOn": [
 											{
 												"activity": "Set variable1",
@@ -179,9 +181,9 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"variableName": "array_file_name",
+											"variableName": "v_filename",
 											"value": {
-												"value": "@variables('v_filename')",
+												"value": "@activity('Get Metadata1').output.childItems[0]",
 												"type": "Expression"
 											}
 										}
