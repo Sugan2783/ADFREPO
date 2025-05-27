@@ -111,7 +111,26 @@
 								"expression": {
 									"value": "@greater(activity('Get Metadata1').output.lastModified,variables('referdate') )",
 									"type": "Expression"
-								}
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set variable1",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "filelatest",
+											"value": {
+												"value": "@activity('Get Metadata2').output.lastModified",
+												"type": "Expression"
+											}
+										}
+									}
+								]
 							}
 						}
 					]
@@ -122,6 +141,9 @@
 			"referdate": {
 				"type": "String",
 				"defaultValue": "1900-01-01 00:00:00"
+			},
+			"filelatest": {
+				"type": "String"
 			}
 		},
 		"folder": {
