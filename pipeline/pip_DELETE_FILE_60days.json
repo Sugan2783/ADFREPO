@@ -45,47 +45,6 @@
 				}
 			},
 			{
-				"name": "Lookup1",
-				"type": "Lookup",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"dataset": {
-						"referenceName": "ADLS_PARAM",
-						"type": "DatasetReference",
-						"parameters": {
-							"CONTAINER": "data",
-							"DIRECTORY": "TESTING",
-							"FILENAME": {
-								"value": " ",
-								"type": "Expression"
-							}
-						}
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
 				"name": "Delete1",
 				"type": "Delete",
 				"dependsOn": [
@@ -117,10 +76,14 @@
 							}
 						}
 					},
-					"enableLogging": true,
+					"enableLogging": false,
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
+						"modifiedDatetimeEnd": {
+							"value": "@addDays(utcNow(), -60)",
+							"type": "Expression"
+						},
 						"enablePartitionDiscovery": false
 					}
 				}
