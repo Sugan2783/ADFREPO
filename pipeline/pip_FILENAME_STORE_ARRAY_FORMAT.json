@@ -150,7 +150,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_filename",
+					"value": {
+						"value": "@activity('Copy data1').output.name",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
