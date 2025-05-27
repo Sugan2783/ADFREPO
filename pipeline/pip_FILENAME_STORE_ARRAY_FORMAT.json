@@ -105,7 +105,7 @@
 		],
 		"variables": {
 			"v_filename": {
-				"type": "String"
+				"type": "Array"
 			},
 			"array_file_name": {
 				"type": "Array"
