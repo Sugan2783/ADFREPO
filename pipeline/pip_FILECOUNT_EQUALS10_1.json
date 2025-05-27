@@ -54,7 +54,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(variables('v_count'),10)",
+						"value": "@equals(variables('v_count'),6)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
