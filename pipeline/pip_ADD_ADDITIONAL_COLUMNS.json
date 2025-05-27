@@ -20,7 +20,7 @@
 						"additionalColumns": [
 							{
 								"name": "UPDATED_DATE",
-								"value": "current_date()"
+								"value": "@utcNow()"
 							},
 							{
 								"name": "USER_NAME",
