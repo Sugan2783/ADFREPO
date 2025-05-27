@@ -157,7 +157,7 @@
 										"typeProperties": {
 											"variableName": "v_filename",
 											"value": {
-												"value": "@activity('Get Metadata1').output",
+												"value": "@activity('Get Metadata1').output.childItems",
 												"type": "Expression"
 											}
 										}
