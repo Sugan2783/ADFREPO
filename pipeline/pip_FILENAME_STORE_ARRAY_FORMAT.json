@@ -141,7 +141,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@contains(item(),'File')",
+									"value": "@contains(item().type,'File')",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
