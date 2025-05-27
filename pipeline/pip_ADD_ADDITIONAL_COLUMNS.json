@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "Copy data1",
+				"description": "5) Add additional columns during Copy activity.",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
