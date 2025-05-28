@@ -129,7 +129,7 @@
 										"typeProperties": {
 											"variableName": "filelatest",
 											"value": {
-												"value": "@activity('Get Metadata2').output.lastModified",
+												"value": "@activity('Get Metadata1').output.itemName",
 												"type": "Expression"
 											}
 										}
