@@ -33,6 +33,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -60,6 +61,7 @@
 					"activities": [
 						{
 							"name": "Get Metadata2",
+							"description": "7) Get latest filename from the source folder based on the date and process.",
 							"type": "GetMetadata",
 							"dependsOn": [],
 							"policy": {
@@ -88,6 +90,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -98,6 +101,8 @@
 						{
 							"name": "If Condition1",
 							"type": "IfCondition",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Get Metadata2",
