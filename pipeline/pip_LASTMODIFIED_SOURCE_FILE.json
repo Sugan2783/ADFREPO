@@ -86,7 +86,8 @@
 									}
 								},
 								"fieldList": [
-									"lastModified"
+									"lastModified",
+									"itemName"
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
@@ -101,8 +102,6 @@
 						{
 							"name": "If Condition1",
 							"type": "IfCondition",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Get Metadata2",
@@ -145,7 +144,7 @@
 		"variables": {
 			"referdate": {
 				"type": "String",
-				"defaultValue": "1900-01-01 00:00:00"
+				"defaultValue": "'1900-01-01T00:00:00'"
 			},
 			"filelatest": {
 				"type": "String"
