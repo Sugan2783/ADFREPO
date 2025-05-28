@@ -113,7 +113,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@greater(variables('referdate'),activity('Get Metadata2').output.lastModified)",
+									"value": "@greater(activity('Get Metadata2').output.lastModified,variables('referdate'))",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
@@ -127,9 +127,9 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"variableName": "filelatest",
+											"variableName": "referdate",
 											"value": {
-												"value": "@activity('Get Metadata1').output.itemName",
+												"value": "@activity('Get Metadata2').output.lastModified",
 												"type": "Expression"
 											}
 										}
