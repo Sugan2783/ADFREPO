@@ -65,7 +65,7 @@
 				"source(output(",
 				"          PRODUCT_ID as integer,",
 				"          PRODUCT_NAME as string,",
-				"          PRODUCT_PRICE as float,",
+				"          PRODUCT_PRICE as decimal(5,2),",
 				"          PRODUCT_DESCRIPTION as string,",
 				"          IS_ACTIVE as string,",
 				"          PRODUCT_SUBCATEGORY_ID as integer,",
