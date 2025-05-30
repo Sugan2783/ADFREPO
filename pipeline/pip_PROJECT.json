@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_SCD1",
+						"referenceName": "dataflow_PRODUCT_DIM_SCD1",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"productsrcfile": {
