@@ -24,6 +24,17 @@
 							"supportRFC5988": "true"
 						}
 					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
 					"enableStaging": false
 				},
 				"inputs": [
@@ -32,6 +43,17 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"ClaimStatus": "'Approved'"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ADLS_PARAM",
+						"type": "DatasetReference",
+						"parameters": {
+							"CONTAINER": "adftraining",
+							"DIRECTORY": "API",
+							"FILENAME": "claim_insurance.csv"
 						}
 					}
 				]
