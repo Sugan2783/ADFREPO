@@ -35,16 +35,7 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          PRODUCT_ID as short,",
-				"          PRODUCT_NAME as string,",
-				"          PRODUCT_PRICE as string,",
-				"          PRODUCT_DESCRIPTION as string,",
-				"          CALORIES as short,",
-				"          IS_ACTIVE as string,",
-				"          PRODUCT_SUBCATEGORY_ID as short",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> stgproduct",
 				"source(output(",
