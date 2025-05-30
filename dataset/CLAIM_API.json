@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"ClaimAmount": {
+			"ClaimStatus": {
 				"type": "string"
 			}
 		},
@@ -14,7 +14,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "@dataset().ClaimAmount",
+				"value": "@dataset().ClaimStatus",
 				"type": "Expression"
 			}
 		},
