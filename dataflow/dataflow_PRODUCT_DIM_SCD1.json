@@ -1,5 +1,5 @@
 {
-	"name": "dataflow_SCD1",
+	"name": "dataflow_PRODUCT_DIM_SCD1",
 	"properties": {
 		"folder": {
 			"name": "ADF_TRAINING_DATAFLOW"
