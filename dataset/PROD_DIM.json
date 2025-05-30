@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "HR",
-			"table": "PRODUCT_DIM"
+			"table": "PRODUCTS_DIM_JOIN"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
