@@ -1,6 +1,9 @@
 {
 	"name": "dataflow_SCD1",
 	"properties": {
+		"folder": {
+			"name": "ADF_TRAINING_DATAFLOW"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
