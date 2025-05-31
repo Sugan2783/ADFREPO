@@ -59,9 +59,6 @@
 				},
 				{
 					"name": "surrogateKey1"
-				},
-				{
-					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -123,8 +120,6 @@
 				"split1@INSERT keyGenerate(output(prod_dim_key as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"source1 filter(ERROR_FUNCTION(''),",
-				"     partitionBy('hash', 1)) ~> filter1",
 				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
