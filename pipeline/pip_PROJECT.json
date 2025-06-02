@@ -16,15 +16,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_PRODUCT_DIM_SCD1",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"productsrcfile": {
-								"CONTAINER": "data",
-								"DIRECTORY": "target/AzureProject/DIMTABLE",
-								"FILENAME": "product_src.csv"
-							}
-						}
+						"referenceName": "dataflow_PRODUCT_DIM_SCD2",
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
