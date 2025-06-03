@@ -16,13 +16,25 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_PRODUCT_DIM_SCD2",
+						"referenceName": "dataflow_CLAIM_SCD2",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"productjoin": {
-								"CONTAINER": "data",
-								"DIRECTORY": "target/AzureProject/DIMTABLE",
-								"FILENAME": "product_src.csv"
+							"claimcsv": {
+								"CONTAINER": "adftraining",
+								"DIRECTORY": "STAGE",
+								"FILENAME": "claim.csv"
+							},
+							"claimtgt": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "claim_tgt"
+							},
+							"insertsink": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "claim_tgt"
+							},
+							"updatesink": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "claim_tgt"
 							}
 						}
 					},
