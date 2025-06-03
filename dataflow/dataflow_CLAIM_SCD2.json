@@ -22,13 +22,33 @@
 					"name": "claimtgt"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference"
+					},
+					"name": "insertsink"
+				}
+			],
 			"transformations": [
 				{
 					"name": "lookup1"
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "INSERT"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "SGENERATE"
 				}
 			],
 			"scriptLines": [
@@ -70,7 +90,36 @@
 				"          SRC_MD5 = :src_md5,",
 				"          TGT_MD5 = :tgt_md5,",
 				"          src_md5 := md5(claimcsv@Incident_Number,claimcsv@Claimant_Name,claimcsv@Climant_Address,claimcsv@Payment_Type,claimcsv@Claim_Amount,claimcsv@Insurance_type,claimcsv@Insurance_Number),",
-				"          tgt_md5 := md5(claimtgt@Incident_Number,claimtgt@Claimant_Name,claimtgt@Climant_Address,claimtgt@Payment_Type,claimtgt@Claim_Amount,claimtgt@Insurance_type,claimtgt@Insurance_Number)) ~> derivedColumn1"
+				"          tgt_md5 := md5(claimtgt@Incident_Number,claimtgt@Claimant_Name,claimtgt@Climant_Address,claimtgt@Payment_Type,claimtgt@Claim_Amount,claimtgt@Insurance_type,claimtgt@Insurance_Number)) ~> derivedColumn1",
+				"derivedColumn1 split(INS_UPD_VAR == 'I' || INS_UPD_VAR == 'U',",
+				"     INS_UPD_VAR == 'U',",
+				"     disjoint: false) ~> INSERT@(INSERT, UPDATE)",
+				"INSERT@INSERT select(mapColumn(",
+				"          Claim_Number = INSERT@INSERT@Claim_Number,",
+				"          Incident_Number = INSERT@INSERT@Incident_Number,",
+				"          Claimant_Name = INSERT@INSERT@Claimant_Name,",
+				"          Climant_Address = INSERT@INSERT@Climant_Address,",
+				"          Payment_Type = INSERT@INSERT@Payment_Type,",
+				"          Claim_Amount = INSERT@INSERT@Claim_Amount,",
+				"          Insurance_type = INSERT@INSERT@Insurance_type,",
+				"          Insurance_Number = INSERT@INSERT@Insurance_Number",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"SGENERATE derive(Flag = 'Y') ~> derivedColumn2",
+				"select1 keyGenerate(output(s_key as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> SGENERATE",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> insertsink"
 			]
 		}
 	}
