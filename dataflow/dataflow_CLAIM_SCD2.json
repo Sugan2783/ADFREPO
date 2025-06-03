@@ -164,7 +164,7 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
-				"          s_key,",
+				"          s_key = maxs_key,",
 				"          Flag",
 				"     )) ~> updatesink"
 			]
