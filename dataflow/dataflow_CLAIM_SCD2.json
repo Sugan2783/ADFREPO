@@ -1,0 +1,48 @@
+{
+	"name": "dataflow_CLAIM_SCD2",
+	"properties": {
+		"folder": {
+			"name": "ADF_TRAINING_DATAFLOW"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_PARAM",
+						"type": "DatasetReference"
+					},
+					"name": "claimcsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference"
+					},
+					"name": "claimtgt"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          Claim_Number as string,",
+				"          Incident_Number as string,",
+				"          Claimant_Name as string,",
+				"          Climant_Address as string,",
+				"          Payment_Type as string,",
+				"          Claim_Amount as short,",
+				"          Insurance_type as string,",
+				"          Insurance_Number as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> claimcsv",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claimtgt"
+			]
+		}
+	}
+}
