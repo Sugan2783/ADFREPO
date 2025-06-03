@@ -141,11 +141,15 @@
 				"     insertable:true,",
 				"     updateable:true,",
 				"     upsertable:false,",
-				"     keys:['Claim_Number'],",
+				"     keys:[''],",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> updatesink"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          s_key,",
+				"          Flag",
+				"     )) ~> updatesink"
 			]
 		}
 	}
