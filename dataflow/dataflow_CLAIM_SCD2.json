@@ -147,7 +147,7 @@
 				"          Claim_Amount,",
 				"          Insurance_type,",
 				"          Insurance_Number,",
-				"          maxs_key,",
+				"          maxs_key = sk_generate_key,",
 				"          s_key,",
 				"          Flag",
 				"     )) ~> insertsink",
