@@ -94,7 +94,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: 'select max(s_key) over() as maxs_key, e.* from [dbo].[CLAIM_tgt] e where flag = \\'Y\\'',",
+				"     query: 'select coalesce(max(s_key) over(),0) as maxs_key, e.* from [dbo].[CLAIM_tgt] e where flag = \\'Y\\'',",
 				"     format: 'query') ~> claimtgt",
 				"claimcsv, claimtgt lookup(claimcsv@Claim_Number == claimtgt@Claim_Number,",
 				"     multiple: false,",
