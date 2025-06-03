@@ -23,7 +23,14 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          Claim_Number as string,",
@@ -31,17 +38,39 @@
 				"          Claimant_Name as string,",
 				"          Climant_Address as string,",
 				"          Payment_Type as string,",
-				"          Claim_Amount as short,",
+				"          Claim_Amount as integer,",
 				"          Insurance_type as string,",
 				"          Insurance_Number as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> claimcsv",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          s_key as integer,",
+				"          Claim_Number as string,",
+				"          Incident_Number as string,",
+				"          Claimant_Name as string,",
+				"          Climant_Address as string,",
+				"          Payment_Type as string,",
+				"          Claim_Amount as integer,",
+				"          Insurance_type as string,",
+				"          Insurance_Number as string,",
+				"          Flag as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> claimtgt"
+				"     query: 'select * from dbo.claim_tgt where flag = \\'Y\\'',",
+				"     format: 'query') ~> claimtgt",
+				"claimcsv, claimtgt lookup(claimcsv@Claim_Number == claimtgt@Claim_Number,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 derive(INS_UPD_VAR = iif(isNull(claimtgt@Claim_Number),'I', iif(!isNull(claimtgt@Claim_Number) && :src_md5 != :tgt_md5, 'U','')),",
+				"          SRC_MD5 = :src_md5,",
+				"          TGT_MD5 = :tgt_md5,",
+				"          src_md5 := md5(claimcsv@Incident_Number,claimcsv@Claimant_Name,claimcsv@Climant_Address,claimcsv@Payment_Type,claimcsv@Claim_Amount,claimcsv@Insurance_type,claimcsv@Insurance_Number),",
+				"          tgt_md5 := md5(claimtgt@Incident_Number,claimtgt@Claimant_Name,claimtgt@Climant_Address,claimtgt@Payment_Type,claimtgt@Claim_Amount,claimtgt@Insurance_type,claimtgt@Insurance_Number)) ~> derivedColumn1"
 			]
 		}
 	}
