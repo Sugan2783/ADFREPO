@@ -19,7 +19,7 @@
 						"referenceName": "ADLS_PARAM",
 						"type": "DatasetReference",
 						"parameters": {
-							"CONTAINER": "adftrining",
+							"CONTAINER": "adftraining",
 							"DIRECTORY": "INPUT",
 							"FILENAME": {
 								"value": " ",
