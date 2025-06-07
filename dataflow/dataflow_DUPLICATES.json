@@ -1,5 +1,5 @@
 {
-	"name": "dataflow_PIVOT_CLAIM",
+	"name": "dataflow_DUPLICATES",
 	"properties": {
 		"folder": {
 			"name": "ADF_TRAINING_DATAFLOW"
