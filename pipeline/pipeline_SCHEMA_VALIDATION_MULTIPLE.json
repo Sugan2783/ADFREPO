@@ -114,7 +114,7 @@
 										"CONTAINER": "adftraining",
 										"DIRECTORY": "REFERENCE_FILES",
 										"FILENAME": {
-											"value": "@item().name",
+											"value": "@concat(item().name, '_reference.csv')",
 											"type": "Expression"
 										}
 									}
