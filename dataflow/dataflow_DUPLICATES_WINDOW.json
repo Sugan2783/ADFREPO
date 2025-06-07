@@ -1,5 +1,5 @@
 {
-	"name": "dataflow_DUPLICATES",
+	"name": "dataflow_DUPLICATES_WINDOW",
 	"properties": {
 		"folder": {
 			"name": "ADF_TRAINING_DATAFLOW"
@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "TGTDATA",
+						"referenceName": "ADLS_PARAM",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "BLOB_DB_EMP_PRAC",
+						"referenceName": "Json2",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -34,32 +34,27 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          EMPLOYEE_ID as string,",
+				"          EMPLOYEE_ID as short,",
 				"          FIRST_NAME as string,",
 				"          LAST_NAME as string,",
 				"          EMAIL as string,",
 				"          PHONE_NUMBER as string,",
 				"          HIRE_DATE as string,",
 				"          JOB_ID as string,",
-				"          SALARY as string,",
-				"          COMMISSION_PCT as string,",
-				"          MANAGER_ID as string,",
-				"          DEPARTMENT_ID as string,",
-				"          SK as string",
+				"          SALARY as double,",
+				"          COMMISSION_PCT as double,",
+				"          MANAGER_ID as short,",
+				"          DEPARTMENT_ID as short",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 window(over(EMPLOYEE_ID),",
+				"     asc(EMPLOYEE_ID, true),",
 				"     ROW_NUMBER = rowNumber()) ~> window1",
 				"window1 filter(ROW_NUMBER == 1) ~> filter1",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          COUNTRY_ID as string,",
-				"          COUNTRY_NAME as string,",
-				"          REGION_ID as string",
-				"     ),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",

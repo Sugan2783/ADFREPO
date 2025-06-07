@@ -1,0 +1,19 @@
+{
+	"name": "Json2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "STAGE",
+				"fileSystem": "adftraining"
+			}
+		},
+		"schema": {}
+	}
+}
