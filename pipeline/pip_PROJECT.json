@@ -16,8 +16,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_DUPLICATES",
-						"type": "DataFlowReference"
+						"referenceName": "dataflow_DUPLICATE_AGRREGATE",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"CONTAINER": "adftraining",
+								"DIRECTORY": "INPUT",
+								"FILENAME": "employees.csv"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
