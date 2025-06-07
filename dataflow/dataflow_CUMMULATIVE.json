@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "window1"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -46,9 +49,11 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 window(over(SALARY),",
+				"aggregate1 window(over(SALARY),",
 				"     asc(EMPLOYEE_ID, true),",
 				"     Sum_salary = sum(SALARY)) ~> window1",
+				"source1 aggregate(groupBy(EMPLOYEE_ID),",
+				"     each(match(name != 'EMPLOYEE_ID'), $$ = first($$))) ~> aggregate1",
 				"window1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['CUMMULATIVE.json'],",
