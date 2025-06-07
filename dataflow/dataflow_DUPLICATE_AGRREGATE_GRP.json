@@ -67,7 +67,7 @@
 				"          LAST_NAME as string,",
 				"          {CONTACT DETAILS} as ({Permanent address} as string)[]",
 				"     ),",
-				"     partitionFileNames:['DUPLICATE_AGG_EMP.json'],",
+				"     partitionFileNames:['DUPLICATE_AGG_GRP.json'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
