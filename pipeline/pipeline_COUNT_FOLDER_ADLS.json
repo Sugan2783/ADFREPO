@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "Get Metadata1",
+				"description": "3) Get Count of File in an ADLS folder.",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
