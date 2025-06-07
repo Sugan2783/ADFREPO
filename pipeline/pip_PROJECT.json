@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_DUPLICATE_AGRREGATE",
+						"referenceName": "dataflow_CUMMULATIVE",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
