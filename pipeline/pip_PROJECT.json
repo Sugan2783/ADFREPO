@@ -16,27 +16,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_CLAIM_SCD2",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"claimcsv": {
-								"CONTAINER": "adftraining",
-								"DIRECTORY": "STAGE",
-								"FILENAME": "claim.csv"
-							},
-							"claimtgt": {
-								"TARGET_SCHEMA": "dbo",
-								"TARGET_TABLE": "claim_tgt"
-							},
-							"insertsink": {
-								"TARGET_SCHEMA": "dbo",
-								"TARGET_TABLE": "claim_tgt"
-							},
-							"updatesink": {
-								"TARGET_SCHEMA": "dbo",
-								"TARGET_TABLE": "claim_tgt"
-							}
-						}
+						"referenceName": "dataflow_DUPLICATES",
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
