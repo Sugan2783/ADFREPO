@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ADLS_PARAM",
+						"referenceName": "BLOB_DB_EMP_PRAC",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -55,6 +55,11 @@
 				"window1 filter(ROW_NUMBER == 1) ~> filter1",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          COUNTRY_ID as string,",
+				"          COUNTRY_NAME as string,",
+				"          REGION_ID as string",
+				"     ),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
