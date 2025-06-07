@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Json1",
+						"referenceName": "Json2",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -50,14 +50,6 @@
 				"     each(match(name != 'EMPLOYEE_ID'), $$ = first($$))) ~> aggregate1",
 				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          AUTHOR_UID as integer,",
-				"          CUST_ID as string,",
-				"          FIRST_NAME as string,",
-				"          MIDDLE_NAME as string,",
-				"          LAST_NAME as string,",
-				"          {CONTACT DETAILS} as ({Permanent address} as string)[]",
-				"     ),",
 				"     partitionFileNames:['DUPLICATE_AGG_EMP.json'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
