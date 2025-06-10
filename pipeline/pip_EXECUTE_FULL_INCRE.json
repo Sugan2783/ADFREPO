@@ -28,7 +28,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pip_incremental_load",
+						"referenceName": "pip_INCREMENTAL_LOAD",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
