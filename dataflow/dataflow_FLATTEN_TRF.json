@@ -13,9 +13,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "FLATTENTRANSFORMATION"
-				},
-				{
-					"name": "source1"
 				}
 			],
 			"sinks": [
@@ -46,8 +43,6 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> FLATTENTRANSFORMATION",
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1",
 				"derivedColumn1 foldDown(unroll(Claim_Type),",
 				"     mapColumn(",
 				"          Claim_Number,",

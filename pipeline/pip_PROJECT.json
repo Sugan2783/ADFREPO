@@ -16,13 +16,16 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_CUMMULATIVE",
+						"referenceName": "dataflow_FLATTEN_TRF",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"source1": {
-								"CONTAINER": "adftraining",
-								"DIRECTORY": "INPUT",
-								"FILENAME": "employees.csv"
+							"FLATTENTRANSFORMATION": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "FLATTEN_TRANSFORMATION"
+							},
+							"sink1": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "tgt_FLATTEN_TRANSFORMATION"
 							}
 						}
 					},
