@@ -52,7 +52,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"FLATTENTRANSFORMATION derive(Claim_Type = split(',',Claim_Type)) ~> derivedColumn1",
+				"FLATTENTRANSFORMATION derive(Claim_Type = split(Claim_Type,',')) ~> derivedColumn1",
 				"flatten1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
