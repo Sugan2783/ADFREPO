@@ -54,7 +54,7 @@
 				"source1, source2 assert(expectUnique(Claim_ID, false, 'uniqueid'),",
 				"     expectTrue(! isNull(toDate((claim_Date), 'yyyy-MM-dd')), false, 'dateformat'),",
 				"     expectExists(source1@location_id == source2@location_id, false, 'locationexists')) ~> assert1",
-				"assert1 derive(ISERROR = hasError(claim_amountlocation_name)) ~> derivedColumn1"
+				"assert1 derive(ISERROR = isError()) ~> derivedColumn1"
 			]
 		}
 	}
