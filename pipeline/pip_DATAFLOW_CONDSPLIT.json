@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_PIVOT_TRF",
+						"referenceName": "dataflow_UNPIVOT_TRF",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
@@ -25,7 +25,7 @@
 							},
 							"sink1": {
 								"TARGET_SCHEMA": "dbo",
-								"TARGET_TABLE": "tgt_eventequipment"
+								"TARGET_TABLE": "tgt_unpivot_event"
 							}
 						}
 					},
