@@ -26,6 +26,9 @@
 			"transformations": [
 				{
 					"name": "assert1"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -48,9 +51,10 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source2",
-				"source1, source2 assert(expectUnique(Claim_ID, false, 'assert1'),",
-				"     expectTrue(! isNull(toDate((claim_Date), 'yyyy-MM-dd')), false, 'assert2'),",
-				"     expectExists(source1@location_id == source2@location_id, false, 'assert3')) ~> assert1"
+				"source1, source2 assert(expectUnique(Claim_ID, false, 'uniqueid'),",
+				"     expectTrue(! isNull(toDate((claim_Date), 'yyyy-MM-dd')), false, 'dateformat'),",
+				"     expectExists(source1@location_id == source2@location_id, false, 'locationexists')) ~> assert1",
+				"assert1 derive(ISERROR = hasError(claim_amountlocation_name)) ~> derivedColumn1"
 			]
 		}
 	}
