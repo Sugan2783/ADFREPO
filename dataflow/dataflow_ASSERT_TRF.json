@@ -1,0 +1,57 @@
+{
+	"name": "dataflow_ASSERT_TRF",
+	"properties": {
+		"folder": {
+			"name": "ADF_TRAINING_DATAFLOW"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ADF_TRAIN_SQLDB",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "assert1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Claim_ID as integer,",
+				"          claimant_name as string,",
+				"          claim_amount as integer,",
+				"          claim_Date as string,",
+				"          location_id as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          location_id as integer,",
+				"          location_name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1, source2 assert(expectUnique(Claim_ID, false, 'assert1'),",
+				"     expectTrue(! isNull(toDate((claim_Date), 'yyyy-MM-dd')), false, 'assert2'),",
+				"     expectExists(source1@location_id == source2@location_id, false, 'assert3')) ~> assert1"
+			]
+		}
+	}
+}
