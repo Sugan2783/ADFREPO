@@ -16,8 +16,38 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_ALL_FUNCTIONS",
-						"type": "DataFlowReference"
+						"referenceName": "dataflow_ASSERT_TRF",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "assert_transformaation"
+							},
+							"source2": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "ASSERT_LOCATION_PRIMARY"
+							},
+							"sink1": {
+								"CONTAINER": "adftraining",
+								"DIRECTORY": "STAGE",
+								"FILENAME": "primaryerr.csv"
+							},
+							"sink2": {
+								"CONTAINER": "adftraining",
+								"DIRECTORY": "STAGE",
+								"FILENAME": "locexists.csv"
+							},
+							"sink3": {
+								"CONTAINER": "adftraining",
+								"DIRECTORY": "STAGE",
+								"FILENAME": "dateformat.csv"
+							},
+							"sink4": {
+								"CONTAINER": "adftraining",
+								"DIRECTORY": "STAGE",
+								"FILENAME": "goodrows.csv"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
