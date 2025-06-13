@@ -21,7 +21,11 @@
 						"datasetParameters": {
 							"source1": {
 								"TARGET_SCHEMA": "dbo",
-								"TARGET_TABLE": "assert_transformaation"
+								"TARGET_TABLE": "eventequipmentusage"
+							},
+							"sink1": {
+								"TARGET_SCHEMA": "dbo",
+								"TARGET_TABLE": "tgt_eventequipment"
 							}
 						}
 					},
