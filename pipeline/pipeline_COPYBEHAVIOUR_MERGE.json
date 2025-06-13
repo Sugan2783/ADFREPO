@@ -20,7 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": " source/SRC_FOREACH_LKP",
+							"wildcardFolderPath": " data/source/SRC_FOREACH_LKP",
 							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
@@ -55,7 +55,10 @@
 						"referenceName": "ADLS_PARAM",
 						"type": "DatasetReference",
 						"parameters": {
-							"CONTAINER": "data",
+							"CONTAINER": {
+								"value": " ",
+								"type": "Expression"
+							},
 							"DIRECTORY": {
 								"value": " ",
 								"type": "Expression"
