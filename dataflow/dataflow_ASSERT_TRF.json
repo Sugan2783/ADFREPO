@@ -22,13 +22,45 @@
 					"name": "source2"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_PARAM",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ADLS_PARAM",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ADLS_PARAM",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ADLS_PARAM",
+						"type": "DatasetReference"
+					},
+					"name": "sink4"
+				}
+			],
 			"transformations": [
 				{
 					"name": "assert1"
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -54,7 +86,50 @@
 				"source1, source2 assert(expectUnique(Claim_ID, false, 'uniqueid'),",
 				"     expectTrue(! isNull(toDate((claim_Date), 'yyyy-MM-dd')), false, 'dateformat'),",
 				"     expectExists(source1@location_id == source2@location_id, false, 'locationexists')) ~> assert1",
-				"assert1 derive(ISERROR = isError()) ~> derivedColumn1"
+				"assert1 derive(ISERROR = isError(),",
+				"          duplicateid = hasError('uniqueid'),",
+				"          dateformat = hasError('dateformat'),",
+				"          locexists = hasError('locationexists')) ~> derivedColumn1",
+				"derivedColumn1 split(duplicateid == true(),",
+				"     locexists == true(),",
+				"     dateformat == true(),",
+				"     disjoint: false) ~> split1@(primarykeyerror, Locationexists, dateformat, Goodrows)",
+				"split1@primarykeyerror sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['primaryerr.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1",
+				"split1@Locationexists sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['locexists.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink2",
+				"split1@dateformat sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['dateformat.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink3",
+				"split1@Goodrows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['goodrows.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink4"
 			]
 		}
 	}
