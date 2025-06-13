@@ -28,7 +28,27 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "MergeFiles"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
@@ -44,6 +64,17 @@
 								"value": " ",
 								"type": "Expression"
 							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ADLS_PARAM",
+						"type": "DatasetReference",
+						"parameters": {
+							"CONTAINER": "adftraining",
+							"DIRECTORY": "STAGE",
+							"FILENAME": "merge_files.csv"
 						}
 					}
 				]
