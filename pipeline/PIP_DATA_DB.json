@@ -17,7 +17,13 @@
 				"typeProperties": {
 					"source": {
 						"type": "OracleSource",
-						"partitionOption": "None",
+						"partitionOption": "DynamicRange",
+						"partitionSettings": {
+							"partitionColumnName": "DEPARTMENT_ID",
+							"partitionUpperBound": "5",
+							"partitionLowerBound": "2"
+						},
+						"convertDecimalToInteger": false,
 						"queryTimeout": "02:00:00"
 					},
 					"sink": {
