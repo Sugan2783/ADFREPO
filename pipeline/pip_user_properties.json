@@ -13,6 +13,16 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [
+					{
+						"name": "source",
+						"value": "adls"
+					},
+					{
+						"name": "sink",
+						"value": "adls"
+					}
+				],
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
