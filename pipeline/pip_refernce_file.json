@@ -29,6 +29,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -58,9 +59,12 @@
 							"FILENAME": "learnit_batch_employee_.csv"
 						}
 					},
-					"fieldList": [],
+					"fieldList": [
+						"structure"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
