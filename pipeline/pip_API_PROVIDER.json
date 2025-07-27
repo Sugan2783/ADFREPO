@@ -82,6 +82,34 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Web2",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-79.eastus.logic.azure.com:443/workflows/1bcf2aab290b480293d1e2a9f22caa37/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=s1pTy2RW40lOYJT_sYxDEQYqRSLw8V1gevATlpk07Dk",
+					"body": {
+						"value": "{\n    \"pipeline_name\": \"@{pipeline().Pipeline}\",\n    \"run_id\" : \"@{pipeline().RunId}\",\n    \"status\" : \"@{activity('Copy data1').Status}\",\n    \"error\" : \"@{activity('Copy data1').output.error}\"\n}",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"annotations": []
