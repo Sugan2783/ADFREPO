@@ -62,6 +62,8 @@
 						{
 							"name": "Data flow1",
 							"type": "ExecuteDataFlow",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -74,7 +76,39 @@
 							"typeProperties": {
 								"dataflow": {
 									"referenceName": "dataflow_ins_upd",
-									"type": "DataFlowReference"
+									"type": "DataFlowReference",
+									"parameters": {
+										"source_table": {
+											"value": "'@{item().source_table}'",
+											"type": "Expression"
+										},
+										"source_schema": {
+											"value": "'@{item().source_schema}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"source_table": {
+												"value": "@item().source_table",
+												"type": "Expression"
+											},
+											"source_schema": {
+												"value": "@item().source_schema",
+												"type": "Expression"
+											}
+										},
+										"sink1": {
+											"source_table": {
+												"value": "@item().target_table",
+												"type": "Expression"
+											},
+											"source_schema": {
+												"value": "@item().target_schema",
+												"type": "Expression"
+											}
+										}
+									}
 								},
 								"compute": {
 									"coreCount": 8,
