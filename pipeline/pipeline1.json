@@ -138,6 +138,16 @@
 								"dataflow": {
 									"referenceName": "dataflow2",
 									"type": "DataFlowReference",
+									"parameters": {
+										"source_schema": {
+											"value": "'@{item().target_schema}'",
+											"type": "Expression"
+										},
+										"source_table": {
+											"value": "'@{item().target_table}'",
+											"type": "Expression"
+										}
+									},
 									"datasetParameters": {
 										"source1": {
 											"TARGET_SCHEMA": {
