@@ -114,6 +114,49 @@
 								},
 								"traceLevel": "Fine"
 							}
+						},
+						{
+							"name": "Data flow2",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [
+								{
+									"activity": "Data flow1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "dataflow2",
+									"type": "DataFlowReference",
+									"datasetParameters": {
+										"source1": {
+											"TARGET_SCHEMA": {
+												"value": "@item().target_schema",
+												"type": "Expression"
+											},
+											"TARGET_TABLE": {
+												"value": "@item().target_table",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
+								},
+								"traceLevel": "Fine"
+							}
 						}
 					]
 				}
