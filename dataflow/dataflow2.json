@@ -23,6 +23,10 @@
 			],
 			"transformations": [],
 			"scriptLines": [
+				"parameters{",
+				"     source_schema as string,",
+				"     source_table as string",
+				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
